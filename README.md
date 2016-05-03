@@ -18,9 +18,9 @@ Install NodeJS if you haven't already. ([NodeJS Downloads](http://nodejs.org/dow
 	    -V, --version                output the version number
 	    -u, --username [username]    Spotify Username (required)
 	    -p, --password [password]    Spotify Password (required)
-	    -i, --uri 	   [URI / URL]   Spotify URI / URL for playlist, album or track
+	    -i, --uri 	   [URI / URL]   Spotify URI / URL for playlist, album or track - another valid input for this is "library"
 	    -d, --directory [directory]  Download Directory - Default: "downloads" folder within the same directory
-	    -f, --folder                 Save songs in single folder with the playlist name (PLAYLISTS ONLY!)
+	    -f, --folder                 Create a sub-directory for playlist / album / library
 
 
 
