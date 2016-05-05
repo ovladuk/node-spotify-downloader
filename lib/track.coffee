@@ -16,10 +16,10 @@ class Track
 
 	process: (@uri, @config, @callback) =>
 		@spotify.get @uri, (err, track) =>
-			restriction = track.restriction[0]
-			if !restriction.countriesForbidden? and restriction.countriesAllowed == ""
-				Logger.Error "Song is not available anymore."
-				@callback?()
+#			restriction = track.restriction[0]
+#			if !restriction.countriesForbidden? and restriction.countriesAllowed == ""
+#				Logger.Error "Song is not available anymore."
+#				@callback?()
 			if err
 				return @callback? err
 
@@ -77,8 +77,8 @@ class Track
 			artist: @track.artist[0].name
 			album: @track.album.name
 			title: @track.name
-			year: @track.album.date.year
-			trackNumber: @track.number
+			year: "#{@track.album.date.year}"
+			trackNumber: "#{@track.number}"
 
 		id3.write meta, @file.path
 		return @callback?()
