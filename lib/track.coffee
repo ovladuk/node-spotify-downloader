@@ -77,8 +77,8 @@ class Track
 			artist: @track.artist[0].name
 			album: @track.album.name
 			title: @track.name
-			year: @track.album.date.year.toString()
-			trackNumber: @track.number.toString()
+			year: "#{@track.album.date.year}"
+			trackNumber: "#{@track.number}"
 
 		id3.write meta, @file.path
 		return @callback?()
