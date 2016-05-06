@@ -2,6 +2,7 @@ fs = require("fs")
 mkdirp = require("mkdirp")
 id3 = require("node-id3")
 domain = require("domain")
+httpRequest = require("httpreq")
 Path = require("path")
 Logger = require("./log")
 Logger = new Logger()
@@ -44,7 +45,19 @@ class Track
 		if !fs.existsSync @config.directory
 			mkdirp.sync @config.directory
 
+		@downloadCover()
 		@downloadFile()
+
+	downloadCover: =>
+		coverPath = "#{@file.path}.jpg"
+		coverUrl = "#{@track.album.coverGroup.image[2].uri}"
+		httpRequest.download coverUrl, coverPath, (err, progress) =>
+			if err
+				return Logger.Error err
+		, (err, response) =>
+			if err
+				return Logger.Error err
+			Logger.Log "Cover downloaded: #{@track.artist[0].name} - #{@track.name}"
 
 	downloadFile: =>
 		Logger.Log "Downloading: #{@track.artist[0].name} - #{@track.name}"
@@ -79,8 +92,10 @@ class Track
 			title: @track.name
 			year: "#{@track.album.date.year}"
 			trackNumber: "#{@track.number}"
+			image: "#{@file.path}.jpg"
 
 		id3.write meta, @file.path
+		fs.unlink meta.image
 		return @callback?()
 
 module.exports = Track
