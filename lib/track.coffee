@@ -55,7 +55,7 @@ class Track
   	.on "error", (err) =>
     	Logger.Error "Error while downloading cover: #{err}"
   	.pipe fs.createWriteStream coverPath
-			Logger.Log "Cover downloaded: #{@track.artist[0].name} - #{@track.name}"
+		Logger.Log "Cover downloaded: #{@track.artist[0].name} - #{@track.name}"
 
 	downloadFile: =>
 		Logger.Log "Downloading: #{@track.artist[0].name} - #{@track.name}"
