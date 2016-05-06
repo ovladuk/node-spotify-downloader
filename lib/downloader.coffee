@@ -112,6 +112,10 @@ class Downloader extends EventEmitter
 		async.mapSeries @data.tracks, @processTrack, callback
 
 	processTrack: (uri, callback) =>
+		uriType = spotifyWeb.uriType uri
+		if uriType == "local"
+			Logger.Info "Skipping Local Track: #{uri}"
+			return @callback?()
 		@Track.process uri, @config, callback
 
 module.exports = Downloader

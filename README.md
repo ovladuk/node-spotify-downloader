@@ -11,7 +11,7 @@ Download entire Spotify playlists, albums or tracks (directly from Spotify at 16
 - Unpack the contents to a folder of your choice
 - Run `npm install` from a commandline
 
-###Usage
+###CLI Usage
 
 	Usage: node main.js [options]
 
@@ -46,6 +46,12 @@ Download entire Spotify playlists, albums or tracks (directly from Spotify at 16
 	node main.js -u yourusername -p yourpassword -i spotify:track:74kHlIr01X459gqsSdNilW
 	OR
 	node main.js -u yourusername -p yourpassword -i https://play.spotify.com/track/74kHlIr01X459gqsSdNilW
+
+###Or Run it from your browser:
+  To open in browser, just run from terminal/cmd file run.sh/run.bat (depends of your OS)
+    this file will install all needed modules an start a local server (address will be displayed in terminal, by default is http://localhost:3001).
+    Just open this address in your browser and ... enjoy :)
+
 
 ### Disclaimer:
 
