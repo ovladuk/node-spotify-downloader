@@ -2,7 +2,7 @@ fs = require("fs")
 mkdirp = require("mkdirp")
 id3 = require("node-id3")
 domain = require("domain")
-httpRequest = require("httpreq")
+request = require("request")
 Path = require("path")
 Logger = require("./log")
 Logger = new Logger()
@@ -51,12 +51,10 @@ class Track
 	downloadCover: =>
 		coverPath = "#{@file.path}.jpg"
 		coverUrl = "#{@track.album.coverGroup.image[2].uri}"
-		httpRequest.download coverUrl, coverPath, (err, progress) =>
-			if err
-				return Logger.Error err
-		, (err, response) =>
-			if err
-				return Logger.Error err
+		request.get coverUrl
+  	.on "error", (err) =>
+    	Logger.Error "Error while downloading cover: #{err}"
+  	.pipe fs.createWriteStream coverPath
 			Logger.Log "Cover downloaded: #{@track.artist[0].name} - #{@track.name}"
 
 	downloadFile: =>
