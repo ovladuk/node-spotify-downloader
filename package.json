@@ -12,6 +12,7 @@
     "mkdirp": "^0.5.0",
     "node-id3": "^0.0.4",
     "spotify-web": "file:spot_node.tar.gz",
+    "httpreq": "*",
 
     "socket.io": "*",
     "express": "*",
