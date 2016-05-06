@@ -49,8 +49,8 @@ Download entire Spotify playlists, albums or tracks (directly from Spotify at 16
 
 ###Or Run it from your browser:
   To open in browser, just run from terminal/cmd file run.sh/run.bat (depends of your OS)
-    this file will install all needed modules an start a local server (address will be displayed in terminal, by default is http://localhost:3001)
-    just open this address in your browser and ... enjoy :)
+    this file will install all needed modules an start a local server (address will be displayed in terminal, by default is http://localhost:3001).
+    Just open this address in your browser and ... enjoy :)
 
 
 ### Disclaimer:
