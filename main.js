@@ -18,15 +18,17 @@
     return "download";
   };
 
-  Program.version("0.0.1").option("-u, --username [username]", "Spotify Username (required)", null).option("-p, --password [password]", "Spotify Password (required)", null).option("-i, --uri [url / uri]", "Spotify URL / URI (Track / Album / Playlist)", null).option("-d, --directory [directory]", "Download Directory - Default: \"downloads\" folder within the same directory", getBaseDir()).option("-f, --folder", "Save songs in single folder with the playlist name (PLAYLISTS ONLY!)").parse(process.argv);
+  Program.version("0.0.1").option("-u, --username [username]", "Spotify Username (required)", null).option("-p, --password [password]", "Spotify Password (required)", null).option("-i, --uri [url / uri]", "Spotify URL / URI (Track / Album / Playlist)", null).option("-d, --directory [directory]", "Download Directory - Default: \"downloads\" folder within the same directory", getBaseDir()).option("-h  --format [format]", "Format file paths - Ex: \"{artist.name}/{album.name}/{track.name}.mp3\"").option("-f, --folder", "Save songs in single folder with the playlist name (PLAYLISTS ONLY!)").parse(process.argv);
 
   config = {
     username: Program.username,
     password: Program.password,
     uri: Program.uri,
     directory: Program.directory,
+    format: Program.format,
     folder: Program.folder,
-    generate: Program.generate
+    generate: Program.generate,
+    onWindows: process.platform === 'win32'
   };
 
   if ((config.username == null) || (config.password == null)) {

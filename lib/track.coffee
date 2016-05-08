@@ -5,6 +5,9 @@ domain = require("domain")
 Path = require("path")
 Logger = require("./log")
 Logger = new Logger()
+clone = require("clone")
+sformat = require("string-format")
+{objTypeof, deepMap} = require("./util")
 
 class Track
 	constructor: (@uri, @config, @callback) ->
@@ -26,14 +29,36 @@ class Track
 			@track = track
 			@createDirs()
 
-	fixFilename: =>
-		@file.name = @file.name.replace /[/\\?%*:|"<>]/g, ""
+	fixPathPiece: (piece) ->
+		#piece.replace /[/\\?%*:|"<>]/g, ""
+		piece.split(/[/\\?%*:|"<>]+/g).filter((i)->!!i).join(" ")
 
 	createDirs: =>
 		@config.directory = Path.resolve @config.directory
 
-		@file.name = @track.name.replace(/\//g, " - ")
-		@file.path = @config.directory + "/" + @fixFilename(@file.name) + ".mp3"
+		pathFormat = @config.format || "{artist.name} - {track.name}"
+		#pathFormat ||= "{artist.name}\/{album.name} [{album.year}]\/{track.name}"
+
+		trackCopy = clone(@track)
+		trackCopy.name = trackCopy.name.replace(/\//g, " - ")
+
+		if @config.onWindows
+			fixStrg = (obj) =>
+				if objTypeof(obj) == "[object String]" then @fixPathPiece(obj) else obj
+			deepMap.call({fn: fixStrg}, trackCopy)
+
+		fields =
+			track: trackCopy
+			artist: trackCopy.artist[0]
+			album: trackCopy.album
+		fields.album.year = fields.album.date.year
+
+		_path = sformat pathFormat, fields
+		if !_path.endsWith ".mp3"
+			_path += ".mp3"
+
+		@file.path = Path.join @config.directory, _path
+		@file.directory = Path.dirname @file.path
 
 		if fs.existsSync @file.path
 			stats = fs.statSync @file.path
@@ -41,8 +66,8 @@ class Track
 				Logger.Info "Already downloaded: #{@track.artist[0].name} - #{@track.name}"
 				return @callback?()
 
-		if !fs.existsSync @config.directory
-			mkdirp.sync @config.directory
+		if !fs.existsSync @file.directory
+			mkdirp.sync @file.directory
 
 		@downloadFile()
 
