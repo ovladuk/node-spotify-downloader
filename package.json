@@ -18,6 +18,9 @@
     "http": "*",
     "body-parser": "*"
   },
+  "devDependencies": {
+    "source-map-support": "^0.4.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Lordmau5/node-spotify-downloader"

@@ -1,4 +1,6 @@
 require("coffee-script")
+try
+	require('source-map-support').install()
 
 require("colors")
 

@@ -4,6 +4,10 @@
 
   require("coffee-script");
 
+  try {
+    require('source-map-support').install();
+  } catch (undefined) {}
+
   require("colors");
 
   Program = require("commander");
@@ -57,3 +61,5 @@
   downloader.run();
 
 }).call(this);
+
+//# sourceMappingURL=main.js.map
