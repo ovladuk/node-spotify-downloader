@@ -115,7 +115,7 @@ class Downloader extends EventEmitter
 		uriType = spotifyWeb.uriType uri
 		if uriType == "local"
 			Logger.Info "Skipping Local Track: #{uri}"
-			return @callback?()
+			return callback?()
 		@Track.process uri, @config, callback
 
 module.exports = Downloader
