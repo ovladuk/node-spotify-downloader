@@ -39,10 +39,13 @@ class Track
 		trackCopy = clone(@track)
 		trackCopy.name = trackCopy.name.replace(/\//g, " - ")
 
-		if @config.onWindows
-			fixStrg = (obj) =>
-				if objTypeof(obj) == "[object String]" then fixPathPiece(obj) else obj
-			deepMap.call({fn: fixStrg}, trackCopy)
+		fixStrg = (obj) =>
+			if objTypeof(obj) == "[object String]"
+				obj = obj.replace(/\//g, "-")
+				if @config.onWindows
+					obj = fixPathPiece(obj)
+			obj
+		deepMap.call({fn: fixStrg}, trackCopy)
 
 		fields =
 			track: trackCopy

@@ -34,7 +34,7 @@ config =
 	folder: Program.folder
 	generate: Program.generate
 
-	onWindows: process.platform == 'win32'  || true ##
+	onWindows: process.platform == 'win32'
 
 if !config.username? or !config.password?
 	console.log "No username / password specified!".red

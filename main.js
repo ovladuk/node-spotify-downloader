@@ -27,7 +27,7 @@
     directory: Program.directory,
     folder: Program.folder,
     generate: Program.generate,
-    onWindows: process.platform === 'win32' || true
+    onWindows: process.platform === 'win32'
   };
 
   if ((config.username == null) || (config.password == null)) {
