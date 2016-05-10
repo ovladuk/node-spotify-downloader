@@ -1,12 +1,14 @@
 Logger = require("./log")
 Logger = new Logger()
 Track = require("./track")
+{fixPathPiece} = require("./util")
 
 fs = require("fs")
 async = require("async")
 lodash = require("lodash")
 spotifyWeb = require("spotify-web")
 EventEmitter = require("events").EventEmitter
+Path = require('path')
 
 class Downloader extends EventEmitter
 	constructor: (@config) ->
@@ -14,6 +16,12 @@ class Downloader extends EventEmitter
 			trackCount: 0
 		}
 		@Track = new Track()
+
+	fixPath: (path) =>
+		path = path.replace(/\//g, "-")  # maybe this should be " - "
+		if @config.onWindows
+			path = fixPathPiece(path)
+		path
 
 	run: =>
 		async.series [@login, @handleType, @handleDownload], (err, res) =>
@@ -47,8 +55,8 @@ class Downloader extends EventEmitter
 
 				@data.name = data.attributes.name
 
-				if @config.folder
-					@config.directory = @config.directory + "/" + @data.name.replace(/\//g, "-") + "/"
+				if @config.folder == true or @config.folder == ""
+					@config.directory = Path.join @config.directory, @fixPath(@data.name)
 
 				@data.tracks = lodash.map data.contents.items, (track) =>
 					@data.trackCount += 1
@@ -67,8 +75,8 @@ class Downloader extends EventEmitter
 
 				@data.name = album.name
 
-				if @config.folder
-					@config.directory = @config.directory + "/" + @data.name.replace(/\//g, "-") + " [#{album.date.year}]" + "/"
+				if @config.folder == true or @config.folder == ""
+					@config.directory = Path.join @config.directory, @fixPath(@data.name)+" [#{album.date.year}]/"
 
 				tracks = []
 				album.disc.forEach (disc) =>
@@ -97,8 +105,8 @@ class Downloader extends EventEmitter
 				if err
 					return Logger.Error "Library data error... #{err}"
 
-				if @config.folder
-					@config.directory = @config.directory + "/Library/"
+				if @config.folder == true or @config.folder == ""
+					@config.directory = Path.join @config.directory, "Library/"
 
 				@data.tracks = lodash.map data.contents.items, (track) =>
 					@data.trackCount += 1

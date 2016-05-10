@@ -12,4 +12,10 @@ deepMap = (obj) ->
 	else
 		@fn?(obj) ? obj
 
-module.exports = { objTypeof, deepMap }
+
+fixPathPiece = (piece) ->
+	#piece.replace /[/\\?%*:|"<>]/g, ""
+	piece.split(/[\/\\?%*:|"<>]/g).filter((i)->!!i).join(" ")
+
+
+module.exports = { objTypeof, deepMap, fixPathPiece }

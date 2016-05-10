@@ -7,7 +7,7 @@ Logger = require("./log")
 Logger = new Logger()
 clone = require("clone")
 sformat = require("string-format")
-{objTypeof, deepMap} = require("./util")
+{objTypeof, deepMap, fixPathPiece} = require("./util")
 
 class Track
 	constructor: (@uri, @config, @callback) ->
@@ -29,14 +29,11 @@ class Track
 			@track = track
 			@createDirs()
 
-	fixPathPiece: (piece) ->
-		#piece.replace /[/\\?%*:|"<>]/g, ""
-		piece.split(/[/\\?%*:|"<>]+/g).filter((i)->!!i).join(" ")
 
 	createDirs: =>
 		@config.directory = Path.resolve @config.directory
 
-		pathFormat = @config.format || "{artist.name} - {track.name}"
+		pathFormat = if @config.folder and typeof @config.folder == 'string' then @config.folder else "{artist.name} - {track.name}"
 		#pathFormat ||= "{artist.name}\/{album.name} [{album.year}]\/{track.name}"
 
 		trackCopy = clone(@track)
@@ -44,7 +41,7 @@ class Track
 
 		if @config.onWindows
 			fixStrg = (obj) =>
-				if objTypeof(obj) == "[object String]" then @fixPathPiece(obj) else obj
+				if objTypeof(obj) == "[object String]" then fixPathPiece(obj) else obj
 			deepMap.call({fn: fixStrg}, trackCopy)
 
 		fields =
@@ -53,7 +50,12 @@ class Track
 			album: trackCopy.album
 		fields.album.year = fields.album.date.year
 
-		_path = sformat pathFormat, fields
+		try
+			_path = sformat pathFormat, fields
+		catch err
+			Logger.Error "Invalid path format: #{err}"
+			throw err
+
 		if !_path.endsWith ".mp3"
 			_path += ".mp3"
 
