@@ -60,7 +60,7 @@ class Track
 		try
 			_path = sformat pathFormat, fields
 		catch err
-			Logger.Error "Invalid path format: #{err}"
+			Logger.Error "Invalid path format: #{err}", 1
 			return @callback?()
 
 		if !_path.endsWith ".mp3"
@@ -72,7 +72,7 @@ class Track
 		if fs.existsSync @file.path
 			stats = fs.statSync @file.path
 			if stats.size != 0
-				Logger.Info "Already downloaded: #{@track.artist[0].name} - #{@track.name}"
+				Logger.Info "Already downloaded: #{@track.artist[0].name} - #{@track.name}", 1
 				return @callback?()
 
 		if !fs.existsSync @file.directory
@@ -96,18 +96,18 @@ class Track
 		Logger.Log "Cover downloaded: #{@track.artist[0].name} - #{@track.name}"
 
 	downloadFile: =>
-		Logger.Log "Downloading: #{@track.artist[0].name} - #{@track.name}"
+		Logger.Log "Downloading: #{@track.artist[0].name} - #{@track.name}", 1
 
 		d = domain.create()
 		d.on "error", (err) =>
-			Logger.Error "Error received: #{err}"
+			Logger.Error "Error received: #{err}", 2
 			if "#{err}".indexOf("Rate limited") > -1
-				Logger.Info "#{err} ... { Retrying in 10 seconds }"
+				Logger.Info "#{err} ... { Retrying in 10 seconds }", 2
 				if @retryCounter < 2
 					@retryCounter++
 					setTimeout @downloadFile, 10000
 				else
-					Logger.Error "Unable to download song. Continuing"
+					Logger.Error "Unable to download song. Continuing", 2
 					@callback?()
 			else
 				return @callback?()
@@ -115,10 +115,10 @@ class Track
 			out = fs.createWriteStream @file.path
 			try
 				@track.play().pipe(out).on "finish", =>
-					Logger.Log "Done: #{@track.artist[0].name} - #{@track.name}"
+					Logger.Success "Done: #{@track.artist[0].name} - #{@track.name}", 2
 					@writeMetadata()
 			catch err
-				Logger.Error "Error while downloading track! #{err}"
+				Logger.Error "Error while downloading track! #{err}", 2
 				@callback?()
 
 	writeMetadata: =>

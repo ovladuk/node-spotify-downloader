@@ -37,7 +37,7 @@ class Downloader extends EventEmitter
 			if err
 				return Logger.Error "Error logging in... (#{err})"
 
-			Logger.Log "Login successful!"
+			Logger.Success "Login successful!"
 
 			@spotify = SpotifyInstance
 			@Track.setSpotify @spotify
