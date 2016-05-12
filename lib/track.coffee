@@ -28,8 +28,11 @@ class Track
 				return @callback? err
 
 			@track = track
-			@createDirs()
-
+			try
+				@createDirs()
+			catch err
+				Logger.Error "Error on track: \"#{@track.artist[0].name} - #{@track.name}\" : #{err} \n\n#{err.stack}"
+				return @callback?()
 
 	createDirs: =>
 		@config.directory = Path.resolve @config.directory
@@ -58,7 +61,7 @@ class Track
 			_path = sformat pathFormat, fields
 		catch err
 			Logger.Error "Invalid path format: #{err}"
-			throw err
+			return @callback?()
 
 		if !_path.endsWith ".mp3"
 			_path += ".mp3"
