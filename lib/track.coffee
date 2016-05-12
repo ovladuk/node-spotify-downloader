@@ -83,8 +83,8 @@ class Track
 
 	downloadCover: =>
 		coverPath = "#{@file.path}.jpg"
-		images = @track.album.coverGroup.image
-		image = images[2] ? images[0]
+		images = @track.album.coverGroup?.image
+		image = images?[2] ? images?[0]
 		if !image
 			Logger.Error "Can't download cover: #{@track.artist[0].name} - #{@track.name}"
 			return
