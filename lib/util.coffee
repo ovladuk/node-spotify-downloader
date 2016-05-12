@@ -1,17 +1,18 @@
 
 objTypeof = (obj) -> Object.prototype.toString.call(obj)
 
+chkFn = (fn) -> if typeof fn == "function" then fn else (o)->o
+
 deepMap = (obj) ->
 	dp = deepMap.bind(@)
 	if objTypeof(obj) == "[object Array]"
-		obj.map( dp )
+		chkFn(@array)( obj.map(dp) )
 	else if objTypeof(obj) == "[object Object]"
 		for own k,v of obj
 			obj[k] = dp(v)
-		obj
+		chkFn(@object)(obj)
 	else
-		@fn?(obj) ? obj
-
+		chkFn(@fn)(obj)
 
 fixPathPiece = (piece) ->
 	#piece.replace /[/\\?%*:|"<>]/g, ""
