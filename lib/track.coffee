@@ -83,7 +83,12 @@ class Track
 
 	downloadCover: =>
 		coverPath = "#{@file.path}.jpg"
-		coverUrl = "#{@track.album.coverGroup.image[2].uri}"
+		images = @track.album.coverGroup.image
+		image = images[2] ? images[0]
+		if !image
+			Logger.Error "Can't download cover: #{@track.artist[0].name} - #{@track.name}"
+			return
+		coverUrl = "#{image.uri}"
 		request.get coverUrl
   	.on "error", (err) =>
     	Logger.Error "Error while downloading cover: #{err}"
