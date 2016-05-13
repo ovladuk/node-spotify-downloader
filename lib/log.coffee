@@ -1,24 +1,33 @@
 colors = require('colors')
 
 class Logger
-	Error: (msg) =>
-		if typeof msg == 'undefined'
-			return
-		console.log "#{msg}".red
 
-	Success: (msg) =>
-		if typeof msg == 'undefined'
-			return
-		console.log "#{msg}".green
+	_getIndent: (i) =>
+		idnt = '\ \ '
+		if i and typeof i == "number" then " #{idnt.repeat(i-1)}- " else ''
 
-	Info: (msg) =>
+	Error: (msg, i) =>
 		if typeof msg == 'undefined'
 			return
-		console.log "#{msg}".yellow
+		idnt = @_getIndent(i)
+		console.log "#{idnt}#{msg}".red
 
-	Log: (msg) =>
+	Success: (msg, i) =>
 		if typeof msg == 'undefined'
 			return
-		console.log " - #{msg}".green
+		idnt = @_getIndent(i)
+		console.log "#{idnt}#{msg}".green
+
+	Info: (msg, i) =>
+		if typeof msg == 'undefined'
+			return
+		idnt = @_getIndent(i)
+		console.log "#{idnt}#{msg}".yellow
+
+	Log: (msg, i) =>
+		if typeof msg == 'undefined'
+			return
+		idnt = @_getIndent(i)
+		console.log "#{idnt}#{msg}"
 
 module.exports = Logger

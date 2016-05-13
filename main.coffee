@@ -1,4 +1,6 @@
 require("coffee-script")
+try
+	require('source-map-support').install()
 
 require("colors")
 
@@ -16,7 +18,7 @@ Program
 	.option("-i, --uri [url / uri]", "Spotify URL / URI (Track / Album / Playlist)", null)
 
 	.option("-d, --directory [directory]", "Download Directory - Default: \"downloads\" folder within the same directory", getBaseDir())
-	.option("-f, --folder", "Save songs in single folder with the playlist name (PLAYLISTS ONLY!)")
+	.option("-f, --folder [format]", "Save songs in single folder with the playlist name or specified path format - e.g. \"{artist.name}/{album.name}/{track.name}\"")
 	#.option("-g, --generate", "Generate file for playlist (PLAYLISTS ONLY!)")
 
 	.parse(process.argv)
@@ -28,8 +30,11 @@ config =
 	uri: Program.uri
 
 	directory: Program.directory
+	#format: Program.format
 	folder: Program.folder
 	generate: Program.generate
+
+	onWindows: process.platform == 'win32'
 
 if !config.username? or !config.password?
 	console.log "No username / password specified!".red
