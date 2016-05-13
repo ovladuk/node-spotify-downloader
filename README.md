@@ -1,6 +1,6 @@
 # node-spotify-downloader
 
-A CLI and GUI solution to download music from Spotify
+A community driven CLI and GUI solution to download music from Spotify
 [![Join the chat at https://gitter.im/Lordmau5/node-spotify-downloader](https://badges.gitter.im/Lordmau5/node-spotify-downloader.svg)](https://gitter.im/Lordmau5/node-spotify-downloader?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Download entire Spotify playlists, albums or tracks (directly from Spotify at 160kbps) to your local machine.
