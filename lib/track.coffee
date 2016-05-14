@@ -16,10 +16,10 @@ class Track
 		@file = {}
 		@retryCounter = 0
 
-	setSpotify: (@spotify) ->
+	@setSpotify: (@spotify) ->
 
-	process: (@uri, @config, @callback) =>
-		@spotify.get @uri, (err, track) =>
+	process: ->
+		@constructor.spotify.get @uri, (err, track) =>
 #			restriction = track.restriction[0]
 #			if !restriction.countriesForbidden? and restriction.countriesAllowed == ""
 #				Logger.Error "Song is not available anymore."
@@ -34,7 +34,7 @@ class Track
 				Logger.Error "Error on track: \"#{@track.artist[0].name} - #{@track.name}\" : #{err} \n\n#{err.stack}"
 				return @callback?()
 
-	createDirs: =>
+	createDirs: ->
 		@config.directory = Path.resolve @config.directory
 
 		pathFormat = if @config.folder and typeof @config.folder == 'string' then @config.folder else "{artist.name} - {track.name}"
@@ -83,7 +83,7 @@ class Track
 		@downloadCover()
 		@downloadFile()
 
-	downloadCover: =>
+	downloadCover: ->
 		coverPath = "#{@file.path}.jpg"
 		images = @track.album.coverGroup?.image
 		image = images?[2] ? images?[0]
@@ -97,7 +97,7 @@ class Track
   	.pipe fs.createWriteStream coverPath
 		Logger.Success "Cover downloaded: #{@track.artist[0].name} - #{@track.name}", 2
 
-	downloadFile: =>
+	downloadFile: ->
 		d = domain.create()
 		d.on "error", (err) =>
 			Logger.Error "Error received: #{err}", 2
@@ -121,7 +121,7 @@ class Track
 				Logger.Error "Error while downloading track! #{err}", 2
 				@callback?()
 
-	writeMetadata: =>
+	writeMetadata: ->
 		meta =
 			artist: @track.artist[0].name
 			album: @track.album.name
