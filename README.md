@@ -55,6 +55,7 @@ in case you are downloading all saved songs (`-i library`).
 If you want to specify a path templare, the following tokens are available:
 
 - `{track.name}`
+- `{track.number}`
 - `{artist.name}`
 - `{album.name}`
 - `{album.year}`
