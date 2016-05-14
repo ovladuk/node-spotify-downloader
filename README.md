@@ -6,7 +6,7 @@ A community driven CLI and GUI solution to download music from Spotify
 Download entire Spotify playlists, albums or tracks (directly from Spotify at 160kbps) to your local machine.
 
 ###Prerequisites:
-- Install NodeJS **(LTS)** if you haven't already. ([NodeJS Downloads](http://nodejs.org/download/))
+- Install NodeJS **(v4.4.4 LTS)** if you haven't already. ([NodeJS Downloads](https://nodejs.org/en/))
 - Download this repository as a .zip archive
 - Unpack the contents to a folder of your choice
 - Run `npm install` from a commandline
