@@ -52,7 +52,7 @@ If you pass `-f` flag without specifying a file path template, it will save the
 songs inside a folder with the name of the album/playlist, or inside `./Library`
 in case you are downloading all saved songs (`-i library`).
 
-If you want to specify a path templare, the following tokens are available:
+If you want to specify a path template, the following tokens are available:
 
 - `{track.name}`
 - `{artist.name}`
