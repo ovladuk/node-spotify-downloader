@@ -121,7 +121,7 @@ class Downloader extends EventEmitter
 	processTrack: (uri, callback) =>
 		uriType = spotifyWeb.uriType uri
 		if uriType == "local"
-			Logger.Info "Skipping Local Track: #{uri}"
+			Logger.Info "Skipping Local Track: #{uri}", 1
 			return callback?()
 		new Track(uri, @config, callback).process()
 
