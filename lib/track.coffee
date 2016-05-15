@@ -78,6 +78,8 @@ class Track
 		if !fs.existsSync @file.directory
 			mkdirp.sync @file.directory
 
+		Logger.Log "Downloading: #{@track.artist[0].name} - #{@track.name}", 1
+
 		@downloadCover()
 		@downloadFile()
 
@@ -96,8 +98,6 @@ class Track
 		Logger.Success "Cover downloaded: #{@track.artist[0].name} - #{@track.name}", 2
 
 	downloadFile: =>
-		Logger.Log "Downloading: #{@track.artist[0].name} - #{@track.name}", 1
-
 		d = domain.create()
 		d.on "error", (err) =>
 			Logger.Error "Error received: #{err}", 2
