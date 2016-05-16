@@ -20,6 +20,14 @@
     return e.preventDefault();
   });
 
+  $(document).on('change', '#single-folder', function(e) {
+    if (this.checked) {
+      return $('#single-folder-download').parent().show();
+    } else {
+      return $('#single-folder-download').parent().hide();
+    }
+  });
+
   $(document).on('submit', '#download', function(e) {
     var form;
     e.preventDefault();

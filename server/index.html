@@ -70,7 +70,11 @@
                             </div>
                             <div class="col-xs-6 form-group">
                                 <label>Download to single folder</label>
-                                <input class="form-control" type="checkbox" name="download" id="single-folder">
+                                <input class="form-control" type="checkbox" name="folder" id="single-folder">
+                            </div>
+                            <div class="col-xs-12 form-group" style="display: none;">
+                                <label>Save songs in single folder with the playlist name or specified path format:</label>
+                                <input class="form-control" type="text" name="format" id="single-folder-download" placeholder="{artist.name}/{album.name}/{track.name}">
                             </div>
                             <div class="col-xs-12 form-group">
                                 <label>URI:</label>

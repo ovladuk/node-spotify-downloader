@@ -1,2 +1,2 @@
 npm install
-cd server && node server.js
+nodejs server/server.js
