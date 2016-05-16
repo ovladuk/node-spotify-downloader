@@ -22,6 +22,9 @@ root = (req, res) =>
 
 
 run = (req, response) =>
+  if !sk
+    console.error "Something went wrong. Socket is not started, try to refresh browser page or restart server".red
+    return null;
 
   params = ''
   params += if typeof req.body.username != 'undefined' then ' -u ' + req.body.username else ''
@@ -61,6 +64,3 @@ sk = null
 io.set('origins', '*localhost:' + Config.PORT);
 io.on 'connection', (socket) =>
   sk = socket
-  #  socket.emit('news', { hello: 'world' });
-  socket.on 'my other event', (data) =>
-    console.log(data)
