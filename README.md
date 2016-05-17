@@ -12,7 +12,7 @@ Download entire Spotify playlists, albums or tracks (directly from Spotify at 16
 - Custom folder hierarchy
 
 ### Known problems
-- ID3 tags doesn't work with Unicode characters
+- ID3 tags don't work with Unicode characters
 
 ### Prerequisites
 - Install NodeJS **(v4.4.4 LTS)** if you haven't already. ([NodeJS Downloads](https://nodejs.org/en/))
