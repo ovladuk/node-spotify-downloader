@@ -14,6 +14,13 @@ socket.on 'progress', (data) ->
 $(document).on 'click', '#progress', (e) ->
   e.preventDefault();
 
+$(document).on 'change', '#single-folder', (e) ->
+  if this.checked
+    $('#single-folder-download').parent().show()
+  else
+    $('#single-folder-download').parent().hide()
+
+
 $(document).on 'submit', '#download', (e) ->
   e.preventDefault();
 

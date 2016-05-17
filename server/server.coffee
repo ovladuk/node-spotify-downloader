@@ -22,15 +22,22 @@ root = (req, res) =>
 
 
 run = (req, response) =>
+  if !sk
+    console.error "Something went wrong. Socket is not started, try to refresh browser page or restart server".red
+    return null;
 
   params = ''
   params += if typeof req.body.username != 'undefined' then ' -u ' + req.body.username else ''
   params += if typeof req.body.password != 'undefined' then ' -p ' + req.body.password else ''
   params += if typeof req.body.uri != 'undefined' then ' -i ' + req.body.uri else ''
   params += if typeof req.body.directory != 'undefined' && req.body.directory != '' then ' -d ' + req.body.directory else ''
-  params += if typeof req.body.folder != 'undefined' then ' -f ' else ''
 
-  ls = exec("node ../main.js #{params}");
+  if typeof req.body.folder != 'undefined' && typeof req.body.format.trim() != ''
+    params += ' -f \"' + req.body.format.trim() + '\"'
+  else
+    params += if typeof req.body.folder != 'undefined' then ' -f ' else ''
+
+  ls = exec("nodejs main.js #{params}");
 
   ls.stdout.on 'data', (data) =>
 #    console.log "#{data}".green
@@ -57,6 +64,3 @@ sk = null
 io.set('origins', '*localhost:' + Config.PORT);
 io.on 'connection', (socket) =>
   sk = socket
-  #  socket.emit('news', { hello: 'world' });
-  socket.on 'my other event', (data) =>
-    console.log(data)
