@@ -11,7 +11,7 @@ sformat = require("string-format")
 {objTypeof, deepMap, fixPathPiece} = require("./util")
 
 class Track
-	constructor: (@uri, @config, @callback) ->
+	constructor: (@uri, @index, @config, @data, @callback) ->
 		@track = {}
 		@file = {}
 		@retryCounter = 0
@@ -61,6 +61,13 @@ class Track
 			track: trackCopy
 			artist: trackCopy.artist[0]
 			album: trackCopy.album
+			playlist: {}
+		if fields.track.number
+			fields.track.number = padDigits(fields.track.number, String(@data.trackCount).length)
+		if @data.type == "playlist" or @data.type == "library"
+			fields.track.index = padDigits(@index, String(@data.trackCount).length)
+			fields.playlist.name = @data.name
+			fields.playlist.trackCount = @data.trackCount
 		fields.album.year = fields.album.date.year
 
 		try
@@ -145,9 +152,11 @@ class Track
 			year: "#{@track.album.date.year}"
 			trackNumber: "#{@track.number}"
 			image: "#{@file.path}.jpg"
-
 		id3.write meta, @file.path
 		fs.unlink meta.image
 		return @callback?()
+
+	padDigits = (number, digits) =>
+    	return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 
 module.exports = Track

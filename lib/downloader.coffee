@@ -14,6 +14,7 @@ class Downloader extends EventEmitter
 	constructor: (@config) ->
 		@data = {
 			trackCount: 0
+			type: null
 		}
 
 	fixPath: (path) =>
@@ -52,6 +53,7 @@ class Downloader extends EventEmitter
 
 				Logger.Log "Playlist: #{data.attributes.name}"
 
+				@data.type = "playlist"
 				@data.name = data.attributes.name
 
 				if @config.folder == true or @config.folder == ""
@@ -72,6 +74,7 @@ class Downloader extends EventEmitter
 
 				Logger.Log "Album: #{album.name}"
 
+				@data.type = "album"
 				@data.name = album.name
 
 				if @config.folder == true or @config.folder == ""
@@ -91,6 +94,7 @@ class Downloader extends EventEmitter
 		else if @config.type == "track" # Single tracks, aww yiss
 			Logger.Log "Handling track ..."
 
+			@data.type = "track"
 			@data.tracks = [@config.uri]
 
 			@data.trackCount = 1
@@ -103,6 +107,9 @@ class Downloader extends EventEmitter
 			@spotify.library @config.username, 0, 9001, (err, data) =>
 				if err
 					return Logger.Error "Library data error... #{err}"
+
+				@data.type = "library"
+				@data.name = "Library"
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, "Library/"
@@ -123,6 +130,7 @@ class Downloader extends EventEmitter
 		if uriType == "local"
 			Logger.Info "Skipping Local Track: #{uri}", 1
 			return callback?()
-		new Track(uri, @config, callback).process()
+		track_index = @data.tracks.indexOf(uri) + 1
+		new Track(uri, track_index, @config, @data, callback).process()
 
 module.exports = Downloader
