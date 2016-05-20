@@ -32,7 +32,7 @@ Download entire Spotify playlists, albums or tracks (directly from Spotify at 16
 	    -p, --password [password]    Spotify Password (required)
 	    -i, --uri 	   [URI / URL]   Spotify URI / URL for playlist, album or track - another valid input for this is "library"
 	    -d, --directory [directory]  Download Directory - Default: "downloads" folder within the same directory
-	    -f, --folder                 Create a sub-directory for playlist / album / library  or specify folder hierarchy format
+	    -f, --folder                 Create a sub-directory for playlist / album / library or specify folder hierarchy format
 
 #### So
   If you wanted to download the playlist "Top 100 Hip-Hop Tracks on Spotify", you would use the following command:
