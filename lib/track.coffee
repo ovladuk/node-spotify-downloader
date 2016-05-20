@@ -37,7 +37,13 @@ class Track
 	createDirs: =>
 		@config.directory = Path.resolve @config.directory
 
-		pathFormat = if @config.folder and typeof @config.folder == 'string' then @config.folder else "{artist.name} - {track.name}"
+		if @config.folder and typeof @config.folder == "string"
+			if @config.folder == "legacy"
+				pathFormat = "{artist.name}/{album.name} [{album.year}]/{artist.name} - {track.name}" # maybe add "{track.number}"
+			else
+				pathFormat = @config.folder
+		else
+			pathFormat = "{artist.name} - {track.name}"
 		#pathFormat ||= "{artist.name}\/{album.name} [{album.year}]\/{track.name}"
 
 		trackCopy = clone(@track)
