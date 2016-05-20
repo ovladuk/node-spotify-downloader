@@ -16,10 +16,10 @@ class Track
 		@file = {}
 		@retryCounter = 0
 
-	setSpotify: (@spotify) ->
+	@setSpotify: (@spotify) ->
 
-	process: (@uri, @config, @callback) =>
-		@spotify.get @uri, (err, track) =>
+	process: ->
+		@constructor.spotify.get @uri, (err, track) =>
 #			restriction = track.restriction[0]
 #			if !restriction.countriesForbidden? and restriction.countriesAllowed == ""
 #				Logger.Error "Song is not available anymore."
@@ -34,7 +34,7 @@ class Track
 				Logger.Error "Error on track: \"#{@track.artist[0].name} - #{@track.name}\" : #{err} \n\n#{err.stack}"
 				return @callback?()
 
-	createDirs: =>
+	createDirs: ->
 		@config.directory = Path.resolve @config.directory
 
 		if @config.folder and typeof @config.folder == "string"
@@ -89,7 +89,15 @@ class Track
 		@downloadCover()
 		@downloadFile()
 
-	downloadCover: =>
+	cleanDirs: =>
+		fs.stat @file.path, (err, stats) =>
+			if !err
+				fs.unlink @file.path
+		fs.stat "#{@file.path}.jpg", (err, stats) =>
+			if !err
+				fs.unlink "#{@file.path}.jpg"
+
+	downloadCover: ->
 		coverPath = "#{@file.path}.jpg"
 		images = @track.album.coverGroup?.image
 		image = images?[2] ? images?[0]
@@ -103,16 +111,17 @@ class Track
   	.pipe fs.createWriteStream coverPath
 		Logger.Success "Cover downloaded: #{@track.artist[0].name} - #{@track.name}", 2
 
-	downloadFile: =>
+	downloadFile: ->
 		d = domain.create()
 		d.on "error", (err) =>
 			Logger.Error "Error received: #{err}", 2
 			if "#{err}".indexOf("Rate limited") > -1
-				Logger.Info "#{err} ... { Retrying in 10 seconds }", 2
 				if @retryCounter < 2
 					@retryCounter++
+					Logger.Info "#{err} ... { Retrying in 10 seconds }", 2
 					setTimeout @downloadFile, 10000
 				else
+					@cleanDirs()
 					Logger.Error "Unable to download song. Continuing", 2
 					@callback?()
 			else
@@ -124,10 +133,11 @@ class Track
 					Logger.Success "Done: #{@track.artist[0].name} - #{@track.name}", 2
 					@writeMetadata()
 			catch err
+				@cleanDirs()
 				Logger.Error "Error while downloading track! #{err}", 2
 				@callback?()
 
-	writeMetadata: =>
+	writeMetadata: ->
 		meta =
 			artist: @track.artist[0].name
 			album: @track.album.name
