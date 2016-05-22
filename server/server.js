@@ -17,7 +17,8 @@
   require('colors');
 
   Config = {
-    PORT: 3001
+    PORT: 3001,
+    EXECUTABLE: 'node'
   };
 
   server.listen(Config.PORT, 'localhost', (function(_this) {
@@ -57,7 +58,7 @@
       } else {
         params += typeof req.body.folder !== 'undefined' ? ' -f ' : '';
       }
-      ls = exec("nodejs main.js " + params);
+      ls = exec(Config.EXECUTABLE + " main.js " + params);
       ls.stdout.on('data', function(data) {
         return sk.emit('progress', {
           progress: data
