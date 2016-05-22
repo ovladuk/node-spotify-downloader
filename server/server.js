@@ -43,13 +43,21 @@
   run = (function(_this) {
     return function(req, response) {
       var ls, params;
+      if (!sk) {
+        console.error("Something went wrong. Socket is not started, try to refresh browser page or restart server".red);
+        return null;
+      }
       params = '';
       params += typeof req.body.username !== 'undefined' ? ' -u ' + req.body.username : '';
       params += typeof req.body.password !== 'undefined' ? ' -p ' + req.body.password : '';
       params += typeof req.body.uri !== 'undefined' ? ' -i ' + req.body.uri : '';
       params += typeof req.body.directory !== 'undefined' && req.body.directory !== '' ? ' -d ' + req.body.directory : '';
-      params += typeof req.body.folder !== 'undefined' ? ' -f ' : '';
-      ls = exec("node ../main.js " + params);
+      if (typeof req.body.folder !== 'undefined' && typeof req.body.format.trim() !== '') {
+        params += ' -f \"' + req.body.format.trim() + '\"';
+      } else {
+        params += typeof req.body.folder !== 'undefined' ? ' -f ' : '';
+      }
+      ls = exec("nodejs main.js " + params);
       ls.stdout.on('data', function(data) {
         return sk.emit('progress', {
           progress: data
@@ -77,10 +85,7 @@
 
   io.on('connection', (function(_this) {
     return function(socket) {
-      sk = socket;
-      return socket.on('my other event', function(data) {
-        return console.log(data);
-      });
+      return sk = socket;
     };
   })(this));
 

@@ -52,15 +52,19 @@ If you pass `-f` flag without specifying a file path template, it will save the
 songs inside a folder with the name of the album/playlist, or inside `./Library`
 in case you are downloading all saved songs (`-i library`).
 
-If you want to specify a path templare, the following tokens are available:
+If you want to specify a path template, the following tokens are available:
 
 - `{track.name}`
+- `{track.number}`
 - `{artist.name}`
 - `{album.name}`
 - `{album.year}`
 
-e.g. `-f "{artist.name}/{album.name} [{album.year}]/{track.name}"`
+e.g. `-f "{artist.name}/{album.name} [{album.year}]/{track.name}"`  
 will result in: `Rammstein/Mutter [2001]/Sonne.mp3`
+
+Passing `-f legacy` will result in the format:  
+`{artist.name}/{album.name} [{album.year}]/{artist.name} - {track.name}`  
 
 
 ###Or Run it from your browser:
