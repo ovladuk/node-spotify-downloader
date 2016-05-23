@@ -8,6 +8,7 @@ require('colors')
 
 Config = {
   PORT: 3001,
+  EXECUTABLE: 'node',
 }
 
 server.listen Config.PORT, 'localhost', () =>
@@ -37,7 +38,7 @@ run = (req, response) =>
   else
     params += if typeof req.body.folder != 'undefined' then ' -f ' else ''
 
-  ls = exec("nodejs main.js #{params}");
+  ls = exec("#{Config.EXECUTABLE} main.js #{params}");
 
   ls.stdout.on 'data', (data) =>
 #    console.log "#{data}".green
