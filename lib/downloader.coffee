@@ -15,6 +15,7 @@ class Downloader extends EventEmitter
 		@data = {
 			trackCount: 0
 		}
+		@Track = new Track()
 
 	fixPath: (path) =>
 		path = path.replace(/\//g, "-")  # maybe this should be " - "
@@ -39,7 +40,7 @@ class Downloader extends EventEmitter
 			Logger.Success "Login successful!"
 
 			@spotify = SpotifyInstance
-			Track.setSpotify @spotify
+			@Track.setSpotify @spotify
 			callback?()
 
 	handleType: (callback) =>
@@ -123,6 +124,6 @@ class Downloader extends EventEmitter
 		if uriType == "local"
 			Logger.Info "Skipping Local Track: #{uri}", 1
 			return callback?()
-		new Track(uri, @config, callback).process()
+		@Track.process uri, @config, callback
 
 module.exports = Downloader

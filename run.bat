@@ -1,3 +1,2 @@
 START npm install
-cd server
-START node server.js
+START node server/server.js
