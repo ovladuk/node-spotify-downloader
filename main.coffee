@@ -17,7 +17,7 @@ Program
 
 	.option("-i, --uri [url / uri]", "Spotify URL / URI (Track / Album / Playlist)", null)
 
-	.option("-d, --directory [directory]", "Download Directory - Default: \"downloads\" folder within the same directory", getBaseDir())
+	.option("-d, --directory [directory]", "Download Directory - Default: \"download\" folder within the same directory", getBaseDir())
 	.option("-f, --folder [format]", "Save songs in single folder with the playlist name or specified path format - e.g. \"{artist.name}/{album.name}/{track.name}\"")
 	#.option("-g, --generate", "Generate file for playlist (PLAYLISTS ONLY!)")
 
