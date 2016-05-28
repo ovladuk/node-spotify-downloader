@@ -59,17 +59,21 @@ If you want to specify a path template, the following tokens are available:
 - `{artist.name}`
 - `{album.name}`
 - `{album.year}`
+- `{user}` (user name used for downloading)
 
 In case of playlists and library, these tokens are also available:
 
-- `{playlist.name}` ("Libray" in case of library download)
-- `{playlist.index}` (the index of the track in the playlist or library, not in the album it belogs to)
+- `{playlist.name}` ("Library" in case of library download)
 - `{playlist.trackCount}` (the total number of tracks in the playlist or library)
+- `{playlist.user}` (owner of the playlist)
+- `{index}` (the index of the track in the playlist or library, not in the album it belogs to)
+
+To get the id from a track, album, artist or playlist just `.id` attribute.
 
 e.g. `-f "{artist.name}/{album.name} [{album.year}]/{track.name}"`
 will result in: `Rammstein/Mutter [2001]/Sonne.mp3`
 
-e.g. `-f "{playlist.name}/{track.index} - {artist.name} - {track.name}"` for a playlist:
+e.g. `-f "{playlist.name}/{index} - {artist.name} - {track.name}"` for a playlist:
 will result in `My playlist/18 - The Artist - The Song.mp3`
 
 e.g. `-f "{artist.name} - {album.name} [{album.year}]/{track.number} - {artist.name} - {track.name}"` for an album:

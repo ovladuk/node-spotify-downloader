@@ -8,10 +8,10 @@ Logger = require("./log")
 Logger = new Logger()
 clone = require("clone")
 sformat = require("string-format")
-{objTypeof, deepMap, fixPathPiece} = require("./util")
+{objTypeof, deepMap, fixPathPiece, getSpotID} = require("./util")
 
 class Track
-	constructor: (@uri, @index, @config, @data, @callback) ->
+	constructor: (@uri, @config, @data, @callback) ->
 		@track = {}
 		@file = {}
 		@retryCounter = 0
@@ -57,18 +57,28 @@ class Track
 			obj
 		deepMap.call({fn: fixStrg}, trackCopy)
 
+		# Set IDs for track, album and artists
+		o.id = getSpotID(o.uri) for o in [ trackCopy, trackCopy.album ].concat trackCopy.artist
+
 		fields =
 			track: trackCopy
 			artist: trackCopy.artist[0]
 			album: trackCopy.album
 			playlist: {}
-		if fields.track.number
-			fields.track.number = padDigits(fields.track.number, String(@data.trackCount).length)
-		if @data.type == "playlist" or @data.type == "library"
-			fields.track.index = padDigits(@index, String(@data.trackCount).length)
-			fields.playlist.name = @data.name
-			fields.playlist.trackCount = @data.trackCount
 		fields.album.year = fields.album.date.year
+
+		#if fields.track.number
+		#	fields.track.number = padDigits(fields.track.number, String(@data.trackCount).length)
+		if @data.type in ["album", "playlist", "library"]
+			fields.playlist.name = @data.name
+			fields.playlist.uri = @data.uri
+			fields.playlist.id = @data.id
+		if @data.type in ["playlist", "library"]
+			fields.index = fields.track.index = padDigits(@data.index, String(@data.trackCount).length)
+			fields.playlist.trackCount = @data.trackCount
+			fields.playlist.user = @data.user
+
+		fields.user = @config.username
 
 		try
 			_path = sformat pathFormat, fields

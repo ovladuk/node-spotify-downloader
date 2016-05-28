@@ -56,6 +56,11 @@ class Downloader extends EventEmitter
 				@data.type = "playlist"
 				@data.name = data.attributes.name
 
+				@data.uri = @config.uri
+				uriSplit = @config.uri.split(":")
+				@data.user = uriSplit[2]
+				@data.id = uriSplit[4]
+
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)
 
@@ -76,6 +81,8 @@ class Downloader extends EventEmitter
 
 				@data.type = "album"
 				@data.name = album.name
+				@data.uri = @config.uri
+				@data.id = @config.uri.split(":")[2]
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)+" [#{album.date.year}]/"
@@ -110,6 +117,8 @@ class Downloader extends EventEmitter
 
 				@data.type = "library"
 				@data.name = "Library"
+				@data.user = @config.username
+				@data.uri = @data.id = "library"
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, "Library/"
@@ -130,7 +139,7 @@ class Downloader extends EventEmitter
 		if uriType == "local"
 			Logger.Info "Skipping Local Track: #{uri}", 1
 			return callback?()
-		track_index = @data.tracks.indexOf(uri) + 1
-		new Track(uri, track_index, @config, @data, callback).process()
+		@data.index = @data.tracks.indexOf(uri) + 1
+		new Track(uri, @config, @data, callback).process()
 
 module.exports = Downloader
