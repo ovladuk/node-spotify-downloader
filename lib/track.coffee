@@ -90,13 +90,14 @@ class Track
 		@downloadCover()
 		@downloadFile()
 
-	cleanDirs: =>
-		fs.stat @file.path, (err, stats) =>
-			if !err
-				fs.unlink @file.path
-		fs.stat "#{@file.path}.jpg", (err, stats) =>
-			if !err
-				fs.unlink "#{@file.path}.jpg"
+	cleanDirs: (callback) =>
+		clean = (fn, cb) =>
+			fs.stat fn, (err, stats) =>
+				if !err
+					fs.unlink fn, cb
+				else
+					cb?()
+		async.map [@file.path, "#{@file.path}.jpg"], clean, (err)->callback?(err)
 
 	downloadCover: =>
 		coverPath = "#{@file.path}.jpg"
@@ -128,15 +129,18 @@ class Track
 			else
 				return @callback?()
 		d.run =>
-			out = fs.createWriteStream @file.path
+			@out = fs.createWriteStream @file.path
 			try
-				@track.play().pipe(out).on "finish", =>
+				@strm = @track.play()
+				@strm.pipe(@out).on "finish", =>
 					Logger.Success "Done: #{@track.artist[0].name} - #{@track.name}", 2
 					@writeMetadata()
 			catch err
 				@cleanDirs()
 				Logger.Error "Error while downloading track! #{err}", 2
 				@callback?()
+
+	closeStream: (callback) => @strm?.unpipe(@out); callback?()
 
 	writeMetadata: =>
 		meta =
