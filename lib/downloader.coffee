@@ -15,6 +15,7 @@ class Downloader extends EventEmitter
 		@data = {
 			trackCount: 0
 		}
+		Track.init()
 		@Track = new Track()
 
 	fixPath: (path) =>

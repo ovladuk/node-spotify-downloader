@@ -1,3 +1,5 @@
+process = require("process")
+async = require("async")
 fs = require("fs")
 mkdirp = require("mkdirp")
 id3 = require("node-id3")
@@ -16,9 +18,21 @@ class Track
 		@file = {}
 		@retryCounter = 0
 
+	@init: () =>
+		process.on "SIGINT", ()=>
+			Logger.Log("\nCLOSING [SIGINT]")
+			# @.cur?.cleanDirs (err) =>
+			async.series [@.cur?.closeStream, @.cur?.cleanDirs], (err) =>
+				if err
+					Logger.Error "Error while closing: #{err}"
+				else
+					Logger.Success "-- CLEANED --"
+				process.exit(0)
+
 	setSpotify: (@spotify) ->
 
 	process: (@uri, @config, @callback) =>
+		Track.cur = @
 		@spotify.get @uri, (err, track) =>
 #			restriction = track.restriction[0]
 #			if !restriction.countriesForbidden? and restriction.countriesAllowed == ""
