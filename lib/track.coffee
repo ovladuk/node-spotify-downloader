@@ -1,3 +1,5 @@
+process = require("process")
+async = require("async")
 fs = require("fs")
 mkdirp = require("mkdirp")
 id3 = require("node-id3")
@@ -16,9 +18,22 @@ class Track
 		@file = {}
 		@retryCounter = 0
 
+	@init: () =>
+		process.on "SIGINT", ()=>
+			Logger.Log("\nCLOSING [SIGINT]")
+			# @.cur?.cleanDirs (err) =>
+			tasks = [@.cur?.closeStream, @.cur?.cleanDirs].map (f) => f ? (cb)->cb?()
+			async.series tasks, (err) =>
+				if err
+					Logger.Error "Error while closing: #{err}"
+				else
+					Logger.Success "-- CLEANED --"
+				process.exit(0)
+
 	setSpotify: (@spotify) ->
 
 	process: (@uri, @config, @data, @callback) =>
+		Track.cur = @
 		@spotify.get @uri, (err, track) =>
 #			restriction = track.restriction[0]
 #			if !restriction.countriesForbidden? and restriction.countriesAllowed == ""
@@ -107,13 +122,14 @@ class Track
 		@downloadCover()
 		@downloadFile()
 
-	cleanDirs: =>
-		fs.stat @file.path, (err, stats) =>
-			if !err
-				fs.unlink @file.path
-		fs.stat "#{@file.path}.jpg", (err, stats) =>
-			if !err
-				fs.unlink "#{@file.path}.jpg"
+	cleanDirs: (callback) =>
+		clean = (fn, cb) =>
+			fs.stat fn, (err, stats) =>
+				if !err
+					fs.unlink fn, cb
+				else
+					cb?()
+		async.map [@file.path, "#{@file.path}.jpg"], clean, (err)->callback?(err)
 
 	downloadCover: =>
 		coverPath = "#{@file.path}.jpg"
@@ -145,15 +161,18 @@ class Track
 			else
 				return @callback?()
 		d.run =>
-			out = fs.createWriteStream @file.path
+			@out = fs.createWriteStream @file.path
 			try
-				@track.play().pipe(out).on "finish", =>
+				@strm = @track.play()
+				@strm.pipe(@out).on "finish", =>
 					Logger.Success "Done: #{@track.artist[0].name} - #{@track.name}", 2
 					@writeMetadata()
 			catch err
 				@cleanDirs()
 				Logger.Error "Error while downloading track! #{err}", 2
 				@callback?()
+
+	closeStream: (callback) => @strm?.unpipe(@out); callback?()
 
 	writeMetadata: =>
 		meta =

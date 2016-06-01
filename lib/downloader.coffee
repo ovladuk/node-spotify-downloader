@@ -133,6 +133,7 @@ class Downloader extends EventEmitter
 	handleDownload: (callback) =>
 		Logger.Log "Processing #{@data.trackCount} tracks"
 
+		Track.init()
 		async.mapSeries @data.tracks, @processTrack, callback
 
 	processTrack: (uri, callback) =>
