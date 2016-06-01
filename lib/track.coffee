@@ -10,7 +10,7 @@ Logger = require("./log")
 Logger = new Logger()
 clone = require("clone")
 sformat = require("string-format")
-{objTypeof, deepMap, fixPathPiece, getSpotID} = require("./util")
+{cleanEmptyDirs, objTypeof, deepMap, fixPathPiece, getSpotID} = require("./util")
 
 class Track
 	constructor: (@uri, @config, @data, @callback) ->
@@ -129,7 +129,8 @@ class Track
 					fs.unlink fn, cb
 				else
 					cb?()
-		async.map [@file.path, "#{@file.path}.jpg"], clean, (err)->callback?(err)
+		async.map [@file.path, "#{@file.path}.jpg"], clean, (err) => if err then callback?(err) else
+			cleanEmptyDirs @file.directory, callback
 
 	downloadCover: =>
 		coverPath = "#{@file.path}.jpg"
