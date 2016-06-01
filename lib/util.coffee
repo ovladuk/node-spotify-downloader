@@ -1,4 +1,23 @@
 
+async = require("async")
+fs = require("fs")
+Path = require("path")
+
+cleanEmptyDirs = (path, callback) ->
+	stop = false
+	func = (cb)->
+		fs.rmdir path, (err)->
+			if err
+				if err.code == "ENOTEMPTY"
+					stop = true
+					return cb?()
+				else if not err.code == "ENOENT"
+					return cb?(err)
+			path = Path.dirname(path)
+			cb?()
+	async.doUntil func, (->stop), (err)=>callback?(err)
+
+
 objTypeof = (obj) -> Object.prototype.toString.call(obj)
 
 chkFn = (fn) -> if typeof fn == "function" then fn else (o)->o
@@ -25,4 +44,4 @@ getSpotID = (uri) ->
 	else if splitd[1] == "user" and splitd[3] == "playlist"
 		return splitd[4]
 
-module.exports = { objTypeof, deepMap, fixPathPiece, getSpotID }
+module.exports = { cleanEmptyDirs, objTypeof, deepMap, fixPathPiece, getSpotID }
