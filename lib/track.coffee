@@ -8,17 +8,17 @@ Logger = require("./log")
 Logger = new Logger()
 clone = require("clone")
 sformat = require("string-format")
-{objTypeof, deepMap, fixPathPiece} = require("./util")
+{objTypeof, deepMap, fixPathPiece, getSpotID} = require("./util")
 
 class Track
-	constructor: (@uri, @config, @callback) ->
+	constructor: (@uri, @config, @data, @callback) ->
 		@track = {}
 		@file = {}
 		@retryCounter = 0
 
 	setSpotify: (@spotify) ->
 
-	process: (@uri, @config, @callback) =>
+	process: (@uri, @config, @data, @callback) =>
 		@spotify.get @uri, (err, track) =>
 #			restriction = track.restriction[0]
 #			if !restriction.countriesForbidden? and restriction.countriesAllowed == ""
@@ -58,11 +58,28 @@ class Track
 			obj
 		deepMap.call({fn: fixStrg}, trackCopy)
 
+		# Set IDs for track, album and artists
+		o.id = getSpotID(o.uri) for o in [ trackCopy, trackCopy.album ].concat trackCopy.artist
+
 		fields =
 			track: trackCopy
 			artist: trackCopy.artist[0]
 			album: trackCopy.album
+			playlist: {}
 		fields.album.year = fields.album.date.year
+
+		#if fields.track.number
+		#	fields.track.number = padDigits(fields.track.number, String(@data.trackCount).length)
+		if @data.type in ["album", "playlist", "library"]
+			fields.playlist.name = @data.name
+			fields.playlist.uri = @data.uri
+			fields.playlist.id = @data.id
+		if @data.type in ["playlist", "library"]
+			fields.index = fields.track.index = padDigits(@data.index, String(@data.trackCount).length)
+			fields.playlist.trackCount = @data.trackCount
+			fields.playlist.user = @data.user
+
+		fields.user = @config.username
 
 		try
 			_path = sformat pathFormat, fields
@@ -146,9 +163,11 @@ class Track
 			year: "#{@track.album.date.year}"
 			trackNumber: "#{@track.number}"
 			image: "#{@file.path}.jpg"
-
 		id3.write meta, @file.path
 		fs.unlink meta.image
 		return @callback?()
+
+	padDigits = (number, digits) =>
+    	return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 
 module.exports = Track
