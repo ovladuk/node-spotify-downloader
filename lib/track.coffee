@@ -22,7 +22,8 @@ class Track
 		process.on "SIGINT", ()=>
 			Logger.Log("\nCLOSING [SIGINT]")
 			# @.cur?.cleanDirs (err) =>
-			async.series [@.cur?.closeStream, @.cur?.cleanDirs], (err) =>
+			tasks = [@.cur?.closeStream, @.cur?.cleanDirs].map (f) => f ? (cb)->cb?()
+			async.series tasks, (err) =>
 				if err
 					Logger.Error "Error while closing: #{err}"
 				else
