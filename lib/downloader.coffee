@@ -14,6 +14,7 @@ class Downloader extends EventEmitter
 	constructor: (@config) ->
 		@data = {
 			trackCount: 0
+			type: null
 		}
 		@Track = new Track()
 
@@ -53,7 +54,13 @@ class Downloader extends EventEmitter
 
 				Logger.Log "Playlist: #{data.attributes.name}"
 
+				@data.type = "playlist"
 				@data.name = data.attributes.name
+
+				@data.uri = @config.uri
+				uriSplit = @config.uri.split(":")
+				@data.user = uriSplit[2]
+				@data.id = uriSplit[4]
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)
@@ -73,7 +80,10 @@ class Downloader extends EventEmitter
 
 				Logger.Log "Album: #{album.name}"
 
+				@data.type = "album"
 				@data.name = album.name
+				@data.uri = @config.uri
+				@data.id = @config.uri.split(":")[2]
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)+" [#{album.date.year}]/"
@@ -92,6 +102,7 @@ class Downloader extends EventEmitter
 		else if @config.type == "track" # Single tracks, aww yiss
 			Logger.Log "Handling track ..."
 
+			@data.type = "track"
 			@data.tracks = [@config.uri]
 
 			@data.trackCount = 1
@@ -105,6 +116,11 @@ class Downloader extends EventEmitter
 				if err
 					return Logger.Error "Library data error... #{err}"
 
+				@data.type = "library"
+				@data.name = "Library"
+				@data.user = @config.username
+				@data.uri = @data.id = "library"
+
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, "Library/"
 
@@ -117,6 +133,7 @@ class Downloader extends EventEmitter
 	handleDownload: (callback) =>
 		Logger.Log "Processing #{@data.trackCount} tracks"
 
+		Track.init()
 		async.mapSeries @data.tracks, @processTrack, callback
 
 	processTrack: (uri, callback) =>
@@ -124,6 +141,7 @@ class Downloader extends EventEmitter
 		if uriType == "local"
 			Logger.Info "Skipping Local Track: #{uri}", 1
 			return callback?()
-		@Track.process uri, @config, callback
+		@data.index = @data.tracks.indexOf(uri) + 1
+		@Track.process uri, @config, @data, callback
 
 module.exports = Downloader
