@@ -10,7 +10,7 @@ Logger = require("./log")
 Logger = new Logger()
 clone = require("clone")
 sformat = require("string-format")
-{cleanEmptyDirs, objTypeof, deepMap, fixPathPiece, getSpotID} = require("./util")
+{cleanEmptyDirs, makeB64, objTypeof, deepMap, fixPathPiece, getSpotID} = require("./util")
 
 class Track
 	constructor: (@uri, @config, @data, @callback) ->
@@ -75,7 +75,7 @@ class Track
 
 		# Set IDs for track, album and artists
 		o.id = getSpotID(o.uri) for o in [ trackCopy, trackCopy.album ].concat trackCopy.artist
-		o.b64uri = Buffer.from(o.uri,'binary').toString('base64') for o in [ trackCopy, trackCopy.album ].concat trackCopy.artist
+		o.b64uri = makeB64 o.uri for o in [ trackCopy, trackCopy.album ].concat trackCopy.artist
 
 		fields =
 			track: trackCopy
@@ -97,7 +97,8 @@ class Track
 			fields.playlist.trackCount = @data.trackCount
 			fields.playlist.user = @data.user
 
-		fields.b64uri = Buffer.from(@config.uri,'binary').toString('base64')
+		fields.id = @data.id
+		fields.b64uri = @data.b64uri
 		fields.user = @config.username
 
 		try

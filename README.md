@@ -67,6 +67,7 @@ If you want to specify a path template, the following tokens are available:
 - `{album.name}`
 - `{album.year}`
 - `{user}` (user name used for downloading)
+- `{id}` (ID of what is being downloaded)
 - `{b64uri}` (Spotify URI to be downloaded, base64 encoded)
 
 In case of playlists and library, these tokens are also available:
