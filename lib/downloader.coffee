@@ -61,6 +61,7 @@ class Downloader extends EventEmitter
 				uriSplit = @config.uri.split(":")
 				@data.user = uriSplit[2]
 				@data.id = uriSplit[4]
+				@data.b64uri = Buffer.from(@data.uri,'binary').toString('base64')
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)
@@ -84,6 +85,7 @@ class Downloader extends EventEmitter
 				@data.name = album.name
 				@data.uri = @config.uri
 				@data.id = @config.uri.split(":")[2]
+				@data.b64uri = Buffer.from(@data.uri,'binary').toString('base64')
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)+" [#{album.date.year}]/"
@@ -120,6 +122,7 @@ class Downloader extends EventEmitter
 				@data.name = "Library"
 				@data.user = @config.username
 				@data.uri = @data.id = "library"
+				@data.b64uri = Buffer.from(@data.uri,'binary').toString('base64')
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, "Library/"

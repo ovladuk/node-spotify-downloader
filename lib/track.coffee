@@ -89,11 +89,14 @@ class Track
 			fields.playlist.name = @data.name
 			fields.playlist.uri = @data.uri
 			fields.playlist.id = @data.id
+			fields.playlist.b64uri = Buffer.from(@data.uri,'binary').toString('base64')
+
 		if @data.type in ["playlist", "library"]
 			fields.index = fields.track.index = padDigits(@data.index, String(@data.trackCount).length)
 			fields.playlist.trackCount = @data.trackCount
 			fields.playlist.user = @data.user
 
+		fields.b64uri = Buffer.from(@config.uri,'binary').toString('base64')
 		fields.user = @config.username
 
 		try
