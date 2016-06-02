@@ -75,6 +75,7 @@ class Track
 
 		# Set IDs for track, album and artists
 		o.id = getSpotID(o.uri) for o in [ trackCopy, trackCopy.album ].concat trackCopy.artist
+		o.b64uri = Buffer.from(o.uri,'binary').toString('base64') for o in [ trackCopy, trackCopy.album ].concat trackCopy.artist
 
 		fields =
 			track: trackCopy
@@ -89,7 +90,7 @@ class Track
 			fields.playlist.name = @data.name
 			fields.playlist.uri = @data.uri
 			fields.playlist.id = @data.id
-			fields.playlist.b64uri = Buffer.from(@data.uri,'binary').toString('base64')
+			fields.playlist.b64uri = @data.b64uri
 
 		if @data.type in ["playlist", "library"]
 			fields.index = fields.track.index = padDigits(@data.index, String(@data.trackCount).length)
