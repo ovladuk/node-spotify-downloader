@@ -18,6 +18,9 @@ cleanEmptyDirs = (path, callback) ->
 	async.doUntil func, (->stop), (err)=>callback?(err)
 
 
+makeB64 = (str) -> Buffer(str, "binary").toString("base64")
+
+
 objTypeof = (obj) -> Object.prototype.toString.call(obj)
 
 chkFn = (fn) -> if typeof fn == "function" then fn else (o)->o
@@ -44,4 +47,4 @@ getSpotID = (uri) ->
 	else if splitd[1] == "user" and splitd[3] == "playlist"
 		return splitd[4]
 
-module.exports = { cleanEmptyDirs, objTypeof, deepMap, fixPathPiece, getSpotID }
+module.exports = { cleanEmptyDirs, makeB64, objTypeof, deepMap, fixPathPiece, getSpotID }

@@ -1,7 +1,7 @@
 Logger = require("./log")
 Logger = new Logger()
 Track = require("./track")
-{fixPathPiece} = require("./util")
+{makeB64, fixPathPiece} = require("./util")
 
 fs = require("fs")
 async = require("async")
@@ -61,6 +61,7 @@ class Downloader extends EventEmitter
 				uriSplit = @config.uri.split(":")
 				@data.user = uriSplit[2]
 				@data.id = uriSplit[4]
+				@data.b64uri = makeB64 @data.uri
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)
@@ -84,6 +85,7 @@ class Downloader extends EventEmitter
 				@data.name = album.name
 				@data.uri = @config.uri
 				@data.id = @config.uri.split(":")[2]
+				@data.b64uri = makeB64 @data.uri
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, @fixPath(@data.name)+" [#{album.date.year}]/"
@@ -105,6 +107,10 @@ class Downloader extends EventEmitter
 			@data.type = "track"
 			@data.tracks = [@config.uri]
 
+			@data.uri = @config.uri
+			@data.id = @config.uri.split(":")[2]
+			@data.b64uri = makeB64 @data.uri
+
 			@data.trackCount = 1
 
 			callback?()
@@ -120,6 +126,7 @@ class Downloader extends EventEmitter
 				@data.name = "Library"
 				@data.user = @config.username
 				@data.uri = @data.id = "library"
+				@data.b64uri = makeB64 @data.uri
 
 				if @config.folder == true or @config.folder == ""
 					@config.directory = Path.join @config.directory, "Library/"
