@@ -25,6 +25,8 @@ Program
 	#.option("-g, --generate", "Generate file for playlist (PLAYLISTS ONLY!)")
 
 	.option("--sa, --single-artist", "If multiple artist, uses just the first one on ID3 tags")
+	.option("--delimiter-path [delimiter]", "Set delimiter to separate multiple artist in paths")
+	.option("--delimiter-ID3 [delimiter]", "Set delimiter to separate multiple artist in ID3 tags")
 
 	.parse(process.argv)
 
@@ -42,8 +44,8 @@ config =
 	onWindows: process.platform == 'win32'
 
 	singleArtist: Program.singleArtist
-	_artists_token_delimiter: ARTISTS_TOKEN_DELIMITER
-	_artists_id3_delimiter: ARTISTS_ID3_DELIMITER
+	_artists_token_delimiter: Program.delimiterPath ? ARTISTS_TOKEN_DELIMITER
+	_artists_id3_delimiter: Program.delimiterID3 ? ARTISTS_ID3_DELIMITER
 
 if !config.username? or !config.password?
 	console.log "No username / password specified!".red
