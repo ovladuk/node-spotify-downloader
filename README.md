@@ -5,6 +5,8 @@ A community driven CLI and GUI solution to download music from Spotify
 
 Download entire Spotify playlists, albums or tracks (directly from Spotify at 160kbps) to your local machine.
 
+![cli demo](http://i.imgur.com/R1aKQ4Z.png)
+
 ### Features
 - ID3 tags
 - Album art image
