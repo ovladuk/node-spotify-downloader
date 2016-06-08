@@ -10,6 +10,7 @@ Logger = require("./log")
 Logger = new Logger()
 clone = require("clone")
 sformat = require("string-format")
+babelPolyfill = require("babel-polyfill");
 {cleanEmptyDirs, makeB64, objTypeof, deepMap, fixPathPiece, getSpotID} = require("./util")
 
 class Track
