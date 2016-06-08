@@ -165,7 +165,8 @@ class Track
 					Logger.Error "Unable to download song. Continuing", 2
 					@callback?()
 			else
-				return @callback?()
+				@cleanDirs()
+				@callback?()
 		d.run =>
 			@out = fs.createWriteStream @file.path
 			try
