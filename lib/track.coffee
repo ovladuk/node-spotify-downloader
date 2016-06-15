@@ -85,6 +85,10 @@ class Track
 			playlist: {}
 		fields.album.year = fields.album.date.year
 
+		makeArtists = (artists) => (artists.map (a)->a.name).join (@config._artists_token_delimiter ? ",")
+		fields.album.artists = makeArtists trackCopy.album.artist
+		fields.track.artists = makeArtists trackCopy.artist
+
 		#if fields.track.number
 		#	fields.track.number = padDigits(fields.track.number, String(@data.trackCount).length)
 		if @data.type in ["album", "playlist", "library"]
@@ -184,12 +188,18 @@ class Track
 
 	writeMetadata: =>
 		meta =
-			artist: @track.artist[0].name
+			#artist: @track.artist[0].name
 			album: @track.album.name
 			title: @track.name
 			year: "#{@track.album.date.year}"
 			trackNumber: "#{@track.number}"
 			image: "#{@file.path}.jpg"
+
+		_artists = @track.artist
+		meta.artist = if _artists.length > 1 and !@config.singleArtist
+			(_artists.map (a)->a.name).join (@config._artists_id3_delimiter ? "/")
+		else _artists[0].name
+
 		id3.write meta, @file.path
 		fs.unlink meta.image
 		return @callback?()

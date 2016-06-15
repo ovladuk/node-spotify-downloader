@@ -66,9 +66,15 @@ If you want to specify a path template, the following tokens are available:
 
 - `{track.name}`
 - `{track.number}`
-- `{artist.name}`
+- `{track.artists}` (list of track artists names separated by a comma)
+- `{artist.name}` (name of the first artist)
+
+
 - `{album.name}`
 - `{album.year}`
+- `{album.artists}`
+
+
 - `{user}` (user name used for downloading)
 - `{id}` (ID of what is being downloaded)
 - `{b64uri}` (Spotify URI to be downloaded, base64 encoded)

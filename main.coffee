@@ -9,6 +9,9 @@ Downloader = require("./lib/downloader")
 
 getBaseDir = -> "download"
 
+ARTISTS_TOKEN_DELIMITER = ","
+ARTISTS_ID3_DELIMITER = "/"
+
 Program
 	.version("0.0.1")
 
@@ -20,6 +23,10 @@ Program
 	.option("-d, --directory [directory]", "Download Directory - Default: \"download\" folder within the same directory", getBaseDir())
 	.option("-f, --folder [format]", "Save songs in single folder with the playlist name or specified path format - e.g. \"{artist.name}/{album.name}/{track.name}\"")
 	#.option("-g, --generate", "Generate file for playlist (PLAYLISTS ONLY!)")
+
+	.option("--sa, --single-artist", "If multiple artist, uses just the first one on ID3 tags")
+	.option("--delimiter-path [delimiter]", "Set delimiter to separate multiple artist in paths")
+	.option("--delimiter-ID3 [delimiter]", "Set delimiter to separate multiple artist in ID3 tags")
 
 	.parse(process.argv)
 
@@ -35,6 +42,10 @@ config =
 	generate: Program.generate
 
 	onWindows: process.platform == 'win32'
+
+	singleArtist: Program.singleArtist
+	_artists_token_delimiter: Program.delimiterPath ? ARTISTS_TOKEN_DELIMITER
+	_artists_id3_delimiter: Program.delimiterID3 ? ARTISTS_ID3_DELIMITER
 
 if !config.username? or !config.password?
 	console.log "No username / password specified!".red
