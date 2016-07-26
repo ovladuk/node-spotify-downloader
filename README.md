@@ -1,5 +1,7 @@
 # node-spotify-downloader
 
+# ACTUALLY THE PROJECT IS NOT WORKING, LOOKING FOR A SOLUTION.
+
 A community driven CLI and GUI solution to download music from Spotify
 [![Join the chat at https://gitter.im/Lordmau5/node-spotify-downloader](https://badges.gitter.im/Lordmau5/node-spotify-downloader.svg)](https://gitter.im/Lordmau5/node-spotify-downloader?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
