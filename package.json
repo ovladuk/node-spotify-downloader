@@ -1,6 +1,6 @@
 {
   "name": "node-spotify-downloader",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Download Spotify playlists, albums or tracks (from Spotify)",
   "main": "main.js",
   "dependencies": {

@@ -35,14 +35,51 @@ Download entire Spotify playlists, albums or tracks (directly from Spotify at 16
 	    -V, --version                output the version number
 	    -u, --username [username]    Spotify Username (required)
 	    -p, --password [password]    Spotify Password (required)
+	    -c, --captcha  [captcha]      ReCaptcha2 (required)
+		
+	    -s, --fbuid  [fbuid]          facebook uid   (required) alternative
+ 	    -t, --fbtoken [fbToken]       facebook token (required) alternative		
+		
 	    -i, --uri 	   [URI / URL]   Spotify URI / URL for playlist, album or track - another valid input for this is "library"
 	    -d, --directory [directory]  Download Directory - Default: "download" folder within the same directory
 	    -f, --folder                 Create a sub-directory for playlist / album / library or specify folder hierarchy format
 
+#### captcha & Facebook login
+Here is some working sample with both
+Normal and Facebook Login:
+node main.js ^
+	--uri https://play.spotify.com/track/4WF7zntvHfsUAw0m3noWby ^
+	--username bugmenot@mailinator2.com ^
+	--password qweasd ^
+	--captcha ^
+03AHJ_VuuBfXWLdhJbG_VujUm6DKGzV3xpTWBZmhjecWbD57e4gA0iD2iYM_eDfOCZPTnZIWU205FMvtOtVfD4hCgHtpnvPsC_GKLN41sOGQpcmkPypg11sJS5cNOPrAExQTFH0cLqdGo1pB3-J8N240LB3quMt32iqZgEcNohjZQE4MyGBP1wXWkwdezzJ_JDjJ1-QXrlp8MBT82qWEb_tNHQ6qc0kvb6s_5wWbbgib7SSFoeKQFYWzGLsQX69WdfYhBdHkxx4FCkSLD6CokGFPPumSGtMesHV3r6haY2Ecw3qt8syiYex7MpZb1TVuR_F9rtu9ue-a5Wbc0H0YFSBQlkPbbPVTFyYNhylMIKL_xBGcKOzfK82K2e2Je_H3lUkoliROA4Xma9RomKHXhbbVIHt2o3b_8FC632kMQNR-LGxXq6Wz6CZZg2T_Hw-9EfLjTXedXJrAneelBhQxjW3vcwUVpt3Cu1KUv_6y-0GetsHFiwp7d8IBBly-iXHGn9UlTLm-w5Kd0excXyTGMcrI7Kwux52a-62i6l_CtIsx8B2M3PLyvZU9ra3wBAF-fjDtnObfAwIP0TH_vAwUzBs91_8pwDrqcBp32OyLHw51gHFKhRbV4t8HaXQXDltEmS-Ot3JH43Fnf-if6xGueV210Y7xgqVlfDsOvttdoO5IKtb-T4_6xhtT0vzpHpcM3mxGQuIqBHK2M3E7SXOXXMSsArHlF0bKVFzGxp4UjHLoisVxrET_SwUDElvL1Ohkf1O4FbU2JoLpyRt7R2FNTo7QvQW9ehmK32-Wvc2y71TbIGk3ttjfpl2EWlgJNooR2l0NjpCafleu_dZy8LY4_giLGfscrbPYnWcj7ZQ7wv-SJcBpS-EgrNN-BKyHf-Wjv-RERVYVrQ3Osne-WbLW2Wq1h6djoHQ0qS4FSqKBci8JddKRGP3UK-oGebMzKL7-mgfjZMUeeVNyT9g4zYZuANKRmup823lX523Q ^
+	^
+	--fbuid 100407737077319 ^
+	--fbtoken EAAAAKLSe4lIBAEEiksijLZCbkXuIL3BFEnHTFU5x78PrxmjHfIDVsex1Mz0yWFGHLsyTmlONp6gvATBrFttbu4X2DkekXEgrWcuDW1jqfgl3WPfdCCgfeUbrFus4CZCoK2ZCrnEpQ3TZAylt3IRrCr1hGbCnnQOCFWhZAJeClJQZDZD ^
 
+To get --fbuid 	--fbtoken just what over the should of http://play.spotify.com/ when doing the login via Facebook
+watch for the form of https://play.spotify.com/xhr/json/auth.php being submited and get authfbuid token from there.
+You can do that by the developers Tools/Network in Firefox &Chrome.
+
+For normal login you'll need additionally a catcha.
+1. Save this bookmarklet: 
+Spotify Captcha Ripper
+javascript:a=document.querySelector('.g-recaptcha-response');a.style.display='';a.select();a.focus();1
+2. Solve the Captcha on Spotify Webplayer Login
+3. Run the bookmarklet to make the hidden Captcha result field visible. Copy the value and pass it via 
+--captcha
+
+captcha is only valid once so you need to redo this on each login.
+So far at the moment Facebook login is really recommended.
+TO DO:
+However we may extent the code so you may pass also the sessionID you get on each
+valid login so after a successfully login you can reuse that without a new login + captcha
+
+
+		
 #### So
   If you wanted to download the playlist "Top 100 Hip-Hop Tracks on Spotify", you would use the following command:
-
+	
 	node main.js -u yourusername -p yourpassword -i spotify:user:spotify:playlist:06KmJWiQhL0XiV6QQAHsmw
 	OR
 	node main.js -u yourusername -p yourpassword -i https://play.spotify.com/user/spotify/playlist/06KmJWiQhL0XiV6QQAHsmw

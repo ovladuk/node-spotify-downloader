@@ -22,11 +22,14 @@
 
   ARTISTS_ID3_DELIMITER = "/";
 
-  Program.version("0.0.1").option("-u, --username [username]", "Spotify Username (required)", null).option("-p, --password [password]", "Spotify Password (required)", null).option("-i, --uri [url / uri]", "Spotify URL / URI (Track / Album / Playlist)", null).option("-d, --directory [directory]", "Download Directory - Default: \"download\" folder within the same directory", getBaseDir()).option("-f, --folder [format]", "Save songs in single folder with the playlist name or specified path format - e.g. \"{artist.name}/{album.name}/{track.name}\"").option("--sa, --single-artist", "If multiple artist, uses just the first one on ID3 tags").option("--delimiter-path [delimiter]", "Set delimiter to separate multiple artist in paths").option("--delimiter-ID3 [delimiter]", "Set delimiter to separate multiple artist in ID3 tags").parse(process.argv);
+  Program.version("0.0.1").option("-u, --username [username]", "Spotify Username (required)", null).option("-p, --password [password]", "Spotify Password (required)", null).option("-c, --captcha  [captcha]", "ReCaptcha2 (required)", null).option("-s, --fbuid  [fbuid]", "facebook uid   (required) alternative", null).option("-t, --fbtoken [fbToken]", "facebook token (required) alternative", null).option("-i, --uri [url / uri]", "Spotify URL / URI (Track / Album / Playlist)", null).option("-d, --directory [directory]", "Download Directory - Default: \"download\" folder within the same directory", getBaseDir()).option("-f, --folder [format]", "Save songs in single folder with the playlist name or specified path format - e.g. \"{artist.name}/{album.name}/{track.name}\"").option("--sa, --single-artist", "If multiple artist, uses just the first one on ID3 tags").option("--delimiter-path [delimiter]", "Set delimiter to separate multiple artist in paths").option("--delimiter-ID3 [delimiter]", "Set delimiter to separate multiple artist in ID3 tags").parse(process.argv);
 
   config = {
     username: Program.username,
     password: Program.password,
+    captcha: Program.captcha,
+    fbuid: Program.fbuid,
+    token: Program.fbtoken,
     uri: Program.uri,
     directory: Program.directory,
     folder: Program.folder,
@@ -37,9 +40,17 @@
     _artists_id3_delimiter: (ref1 = Program.delimiterID3) != null ? ref1 : ARTISTS_ID3_DELIMITER
   };
 
-  if ((config.username == null) || (config.password == null)) {
-    console.log("No username / password specified!".red);
+  config.DoLogin = !!(config.username && config.password && config.captcha);
+
+  config.DoLoginFB = !!(config.fbuid && config.token);
+
+  if (!config.DoLogin && !config.DoLoginFB) {
+    console.log("No username / password / captcha Or FaceBookLogin specified!".red);
     return Program.outputHelp();
+  }
+
+  if (config.DoLogin && config.DoLoginFB) {
+    console.log("Warning: You set both FaceBookLogin and normal login data. I'll use FaceBookLogin only.".yellow);
   }
 
   if (config.uri == null) {

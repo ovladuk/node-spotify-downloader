@@ -17,13 +17,14 @@
   require('colors');
 
   Config = {
+    DOMAIN: 'localhost',
     PORT: 3001,
-    EXECUTABLE: 'node'
+    EXECUTABLE: 'node main.js'
   };
 
-  server.listen(Config.PORT, 'localhost', (function(_this) {
+  server.listen(Config.PORT, Config.DOMAIN, (function(_this) {
     return function() {
-      return console.log(("Server running at http://localhost:" + Config.PORT).green);
+      return console.log(("Server running at http://" + Config.DOMAIN + ":" + Config.PORT).green);
     };
   })(this));
 
@@ -41,24 +42,36 @@
     };
   })(this);
 
+  app.get('/', root);
+
   run = (function(_this) {
     return function(req, response) {
-      var ls, params;
+      var addParam, b, cmdline, format, ls, params, ref;
       if (!sk) {
         console.error("Something went wrong. Socket is not started, try to refresh browser page or restart server".red);
         return null;
       }
-      params = '';
-      params += typeof req.body.username !== 'undefined' ? ' -u ' + req.body.username : '';
-      params += typeof req.body.password !== 'undefined' ? ' -p ' + req.body.password : '';
-      params += typeof req.body.uri !== 'undefined' ? ' -i ' + req.body.uri : '';
-      params += typeof req.body.directory !== 'undefined' && req.body.directory !== '' ? ' -d ' + req.body.directory : '';
-      if (typeof req.body.folder !== 'undefined' && typeof req.body.format.trim() !== '') {
-        params += ' -f \"' + req.body.format.trim() + '\"';
-      } else {
-        params += typeof req.body.folder !== 'undefined' ? ' -f ' : '';
+      params = "";
+      addParam = function(optName, optValue) {
+        if (!!optValue) {
+          return params += " " + optName + " " + optValue;
+        }
+      };
+      b = req.body;
+      addParam('--fbuid', b.fbuid);
+      addParam('--fbtoken', b.fbtoken);
+      addParam('--username', b.username);
+      addParam('--password', b.password);
+      addParam('--captcha', (ref = b['g-recaptcha-response-1']) != null ? ref[0] : void 0);
+      addParam('--uri', b.uri);
+      addParam('--directory', b.directory);
+      format = b.format.trim();
+      if (!!b.folder) {
+        addParam('--folder', !!format ? "\"" + format + "\"" : "");
       }
-      ls = exec(Config.EXECUTABLE + " main.js " + params);
+      cmdline = Config.EXECUTABLE + " " + params;
+      console.log(cmdline);
+      ls = exec(cmdline);
       ls.stdout.on('data', function(data) {
         return sk.emit('progress', {
           progress: data
@@ -76,13 +89,11 @@
     };
   })(this);
 
-  app.get('/', root);
-
   app.post('/run', run);
 
   sk = null;
 
-  io.set('origins', '*localhost:' + Config.PORT);
+  io.set('origins', "*" + Config.DOMAIN + ":" + Config.PORT);
 
   io.on('connection', (function(_this) {
     return function(socket) {
@@ -91,5 +102,3 @@
   })(this));
 
 }).call(this);
-
-//# sourceMappingURL=server.js.map
