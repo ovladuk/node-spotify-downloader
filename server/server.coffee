@@ -1,25 +1,32 @@
-bodyParser = require('body-parser');
-exec = require('child_process').exec;
-express = require('express');
-app = express();
-server = require('http').Server(app);
-io = require('socket.io')(server);
+bodyParser 	= require('body-parser');
+exec 		= require('child_process').exec;
+express 	= require('express');
+app 		= express();
+
+server 		= require('http').Server(app);
+io 			= require('socket.io')(server);
+
 require('colors')
 
 Config = {
-  PORT: 3001,
-  EXECUTABLE: 'node',
+  DOMAIN: 		'localhost',
+  PORT: 		3001,
+  EXECUTABLE: 	'node main.js',
 }
 
-server.listen Config.PORT, 'localhost', () =>
-  console.log "Server running at http://localhost:#{Config.PORT}".green;
+server.listen Config.PORT, Config.DOMAIN, () =>
+  console.log "Server running at http://#{Config.DOMAIN}:#{Config.PORT}".green;
 
 app.use('/assets', express.static(__dirname + '/assets'));
 app.use bodyParser.json()
 app.use bodyParser.urlencoded({extended: true})
 
+
+
 root = (req, res) =>
   res.sendFile(__dirname + '/index.html');
+
+app.get  '/'	, root
 
 
 run = (req, response) =>
@@ -27,18 +34,33 @@ run = (req, response) =>
     console.error "Something went wrong. Socket is not started, try to refresh browser page or restart server".red
     return null;
 
-  params = ''
-  params += if typeof req.body.username != 'undefined' then ' -u ' + req.body.username else ''
-  params += if typeof req.body.password != 'undefined' then ' -p ' + req.body.password else ''
-  params += if typeof req.body.uri != 'undefined' then ' -i ' + req.body.uri else ''
-  params += if typeof req.body.directory != 'undefined' && req.body.directory != '' then ' -d ' + req.body.directory else ''
+  params = ""
 
-  if typeof req.body.folder != 'undefined' && typeof req.body.format.trim() != ''
-    params += ' -f \"' + req.body.format.trim() + '\"'
-  else
-    params += if typeof req.body.folder != 'undefined' then ' -f ' else ''
+  addParam = (optName, optValue) =>
+    params += " #{optName} #{optValue}"	if !!optValue
 
-  ls = exec("#{Config.EXECUTABLE} main.js #{params}");
+  b = req.body
+  
+  addParam '--fbuid'	,	b.fbuid
+  addParam '--fbtoken'	,	b.fbtoken
+  
+  addParam '--username'	,	b.username
+  addParam '--password'	,	b.password
+  addParam '--captcha'	,	b['g-recaptcha-response-1']?[0]
+ 
+  addParam '--uri'		,	b.uri
+  addParam '--directory',	b.directory
+
+  format = b.format.trim()
+  if !!b.folder
+    addParam '--folder', if !!format then "\"#{ format }\"" else ""
+
+  
+  cmdline = "#{Config.EXECUTABLE} #{params}"
+  
+  console.log (cmdline)
+  
+  ls = exec(cmdline);
 
   ls.stdout.on 'data', (data) =>
 #    console.log "#{data}".green
@@ -56,12 +78,11 @@ run = (req, response) =>
 ##    sk.emit('progress', {progress: data});
 #    response.send(JSON.stringify(data));
 
-
-app.get '/', root
-app.post '/run', run
+app.post '/run'	, run
 
 sk = null
 
-io.set('origins', '*localhost:' + Config.PORT);
+io.set('origins', "*#{Config.DOMAIN}:#{Config.PORT}");
+
 io.on 'connection', (socket) =>
   sk = socket

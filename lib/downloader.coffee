@@ -1,14 +1,15 @@
-Logger = require("./log")
+Logger 			= require("./log")
 Logger = new Logger()
-Track = require("./track")
+
+Track 			= require("./track")
 {makeB64, fixPathPiece} = require("./util")
 
-fs = require("fs")
-async = require("async")
-lodash = require("lodash")
-spotifyWeb = require("spotify-web")
-EventEmitter = require("events").EventEmitter
-Path = require('path')
+fs 				= require("fs")
+async 			= require("async")
+lodash 			= require("lodash")
+spotifyWeb 		= require("spotify-web")
+EventEmitter 	= require("events").EventEmitter
+Path 			= require('path')
 
 class Downloader extends EventEmitter
 	constructor: (@config) ->
@@ -34,7 +35,7 @@ class Downloader extends EventEmitter
 			process.exit(0)
 
 	login: (callback) =>
-		spotifyWeb.login @config.username, @config.password, (err, SpotifyInstance) =>
+		cb_login = (err, SpotifyInstance) =>
 			if err
 				return Logger.Error "Error logging in... (#{err})"
 
@@ -43,6 +44,18 @@ class Downloader extends EventEmitter
 			@spotify = SpotifyInstance
 			@Track.setSpotify @spotify
 			callback?()
+		
+
+		if @config.DoLoginFB 		
+			spotifyWeb.facebookLogin 	\
+				@config.fbuid, @config.token, \
+				cb_login
+
+		else if @config.DoLogin				
+			spotifyWeb.login 	\
+				@config.username, @config.password, @config.captcha, \
+				cb_login
+
 
 	handleType: (callback) =>
 		if @config.type == "playlist" # Good ol' playlists

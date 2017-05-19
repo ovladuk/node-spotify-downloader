@@ -33,6 +33,12 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./assets/js/scripts.js"></script>
+<!--	<script src="https://gstatic.com/recaptcha/api2/r20160802154045/recaptcha__de.js" type="text/javascript" async=""></script>
+ -->
+
+<script src='https://www.google.com/recaptcha/api.js?
+				render=explicit&
+				onload=onRecaptchaLoaded'></script>
 
 </head>
 
@@ -56,42 +62,147 @@
                 <div class="c-form-bottom">
                     <form id="download" role="form" method="post">
                         <div class="row">
-                            <div class="col-xs-6 form-group">
-                                <label>Username</label>
-                                <input class="form-control" type="text" name="username" id="username">
+						
+                          <div cla-ss="c-form-info-box">
+                            <button class="btn collapser" 
+                                data-toggle="collapse"
+                                data-target="#FaceBookLogin">
+                              FaceBookLogin
+                            </button>
+                            
+                            <div id="FaceBookLogin" class="collapse in">
+                              <div class="col-xs-6 form-group">
+                                <label>Facebook UserID</label>
+                                <input class="form-control" type="text" name="fbuid" id="fbuid"  
+                                  placeholder	= "100407737077319"
+                                  value		= "100407737077319"
+                                >
+                              </div>
+                              <div class="col-xs-6 form-group">
+                                <label>Facebook Token</label>
+                                <input class="form-control" type="text" name="fbtoken" id="fbtoken" 
+                                  placeholder	= "EAAAAKLSe4lIBAEEiksijLZCbkXuIL3BFEnHTFU5x78PrxmjHfIDVsex1Mz0yWFGHLsyTmlONp6gvATBrFttbu4X2DkekXEgrWcuDW1jqfgl3WPfdCCgfeUbrFus4CZCoK2ZCrnEpQ3TZAylt3IRrCr1hGbCnnQOCFWhZAJeClJQZDZD"
+                                  value		= "EAAAAKLSe4lIBAEEiksijLZCbkXuIL3BFEnHTFU5x78PrxmjHfIDVsex1Mz0yWFGHLsyTmlONp6gvATBrFttbu4X2DkekXEgrWcuDW1jqfgl3WPfdCCgfeUbrFus4CZCoK2ZCrnEpQ3TZAylt3IRrCr1hGbCnnQOCFWhZAJeClJQZDZD"
+                                >
+                              </div>						
                             </div>
-                            <div class="col-xs-6 form-group">
-                                <label>Password</label>
-                                <input class="form-control" type="password" name="password" id="password">
-                            </div>
+                          </div>
+						  
+                         <div cla-ss="c-form-info-box">
+                            <button class="btn collapser" 
+                                data-toggle="collapse"
+                                data-target="#Login">
+                              Login
+                            </button>
+							
+                          <div id="Login" class="collapse">
+							   <div class="col-xs-6 form-group">
+									<label>Username</label>
+									<input class="form-control" type="text" name="username" id="username"  
+										placeholder	= "bugmenot@mailinator2.com"
+										value		= "bugmenot@mailinator2.com"
+									>
+								</div>
+								<div class="col-xs-6 form-group">
+									<label>Password</label>
+									<input class="form-control" type="text" name="password" id="password" 
+										placeholder	= "qweasd"
+										value		= "qweasd"
+									>
+								</div>
+								
+								<div id="recaptcha_holder" class="col-xs-12 form-group">
+								</div>
+								
+								<div class="col-xs-12 form-group" style="float: right;">
+
+									<label>Captcha</label>
+									<br>
+									<div class="g-recaptcha" 
+										 data-sitekey="6LeaOiITAAAAAF_A-e9qjM6TCgdt4-rqixnkkatL"></div>
+									
+									<!--Beware to retain tabs in here --->
+									<!--http://localhost:3001 
+									  <iframe src= 
+										"https://www.google.com/recaptcha/api2/anchor
+										?k=6LeaOiITAAAAAF_A-e9qjM6TCgdt4-rqixnkkatL
+										&co=aHR0cDovL3BsYXkuc3BvdGlmeS5jb20
+										&hl=de&v=r20160802154045
+										&theme=dark
+										&size=normal
+										&cb=ap65yyq41qhy"
+										title="reCAPTCHA-Widget" width="304" height="78" 
+										role="presentation" frameborder="0" scrolling="no" name="undefined">
+										
+										
+										
+										</iframe></div>
+										
+									  <script type="text/javascript">
+											__recaptcha_api = "http://www.google.com/recaptcha/";
+											debugger
+
+									  </script>
+									  
+									  </iframe>
+									  -->
+									  
+									  
+
+								^Sorry Captcha above currently not working yet. 
+								<ol>
+								<li>Save this bookmarklet: <a href="javascript:a=document.querySelector('.g-recaptcha-response');a.style.display='';a.select();a.focus();1"
+								>Spotify Captcha Ripper</a>
+								</li><li>Solve the Captcha  on <a href="http://play.spotify.com" target="_blank" >Spotify Webplayer Login</a>
+								</li><li>Run the bookmarklet to make the hidden Captcha result field visible. Copy the value and paste it here:
+								</li>
+								</ol>
+								<textarea class="col-xs-12 form-group"
+								  id="g-recaptcha-response-1" 
+								  name="g-recaptcha-response-1" 
+								  class="g-recaptcha-response-1" 
+								  style="float: left "
+								  placeholder	="03AHJ_VuuBfXWLdhJbG_VujUm6DKGzV3xpTWBZmhjecWbD57e4gA0iD2iYM_eDfOCZPTnZIWU205FMvtOtVfD4hCgHtpnvPsC_GKLN41sOGQpcmkPypg11sJS5cNOPrAExQTFH0cLqdGo1pB3-J8N240LB3quMt32iqZgEcNohjZQE4MyGBP1wXWkwdezzJ_JDjJ1-QXrlp8MBT82qWEb_tNHQ6qc0kvb6s_5wWbbgib7SSFoeKQFYWzGLsQX69WdfYhBdHkxx4FCkSLD6CokGFPPumSGtMesHV3r6haY2Ecw3qt8syiYex7MpZb1TVuR_F9rtu9ue-a5Wbc0H0YFSBQlkPbbPVTFyYNhylMIKL_xBGcKOzfK82K2e2Je_H3lUkoliROA4Xma9RomKHXhbbVIHt2o3b_8FC632kMQNR-LGxXq6Wz6CZZg2T_Hw-9EfLjTXedXJrAneelBhQxjW3vcwUVpt3Cu1KUv_6y-0GetsHFiwp7d8IBBly-iXHGn9UlTLm-w5Kd0excXyTGMcrI7Kwux52a-62i6l_CtIsx8B2M3PLyvZU9ra3wBAF-fjDtnObfAwIP0TH_vAwUzBs91_8pwDrqcBp32OyLHw51gHFKhRbV4t8HaXQXDltEmS-Ot3JH43Fnf-if6xGueV210Y7xgqVlfDsOvttdoO5IKtb-T4_6xhtT0vzpHpcM3mxGQuIqBHK2M3E7SXOXXMSsArHlF0bKVFzGxp4UjHLoisVxrET_SwUDElvL1Ohkf1O4FbU2JoLpyRt7R2FNTo7QvQW9ehmK32-Wvc2y71TbIGk3ttjfpl2EWlgJNooR2l0NjpCafleu_dZy8LY4_giLGfscrbPYnWcj7ZQ7wv-SJcBpS-EgrNN-BKyHf-Wjv-RERVYVrQ3Osne-WbLW2Wq1h6djoHQ0qS4FSqKBci8JddKRGP3UK-oGebMzKL7-mgfjZMUeeVNyT9g4zYZuANKRmup823lX523Q"	
+								  ></textarea>
+								  </div>
+
+                          </div>
+
                             <div class="col-xs-6 form-group">
                                 <label>Directory</label>
-                                <input class="form-control" type="text" name="directory" id="directory" placeholder="download/">
+                                <input class="form-control" type="text" name="directory" id="directory" 
+                                       placeholder="download/"
+                                >
                             </div>
                             <div class="col-xs-6 form-group">
                                 <label>Download to single folder</label>
                                 <input class="form-control" type="checkbox" name="folder" id="single-folder">
                             </div>
-                            <div class="col-xs-12 form-group" style="display: none;">
+                            <div class="col-xs-12 form-group" id="single-folder-group" style="display: none;">
                                 <label>Save songs in single folder with the playlist name or specified path format:</label>
-                                <input class="form-control" type="text" name="format" id="single-folder-download" placeholder="{artist.name}/{album.name}/{track.name}">
+                                <input class="form-control" type="text" name="format" id="single-folder-download" 
+                                        placeholder="{artist.name}/{album.name}/{track.name}"
+                                 >
                             </div>
                             <div class="col-xs-12 form-group">
                                 <label>URI:</label>
-                                <input class="form-control" type="text" name="uri" id="uri">
+                                <input class="form-control" type="text" name="uri" id="uri" 
+                                        placeholder	= "https://play.spotify.com/track/4WF7zntvHfsUAw0m3noWby"
+                                        value		= "https://play.spotify.com/track/4WF7zntvHfsUAw0m3noWby"
+                                >
                             </div>
                         </div>
-                        <button type="submit" class="btn">Start Downloading</button>
+                        <button type="submit" class="btn"> Start Downloading</button>
                     </form>
                 </div>
 
                 <div class="c-form-info-box">
-                    <button class="btn btn-success progress-box-header"
+                    <button class="btn btn-success progress-box-header" id="progress-box-header"
                             data-toggle="collapse"
-                            data-target="#intro">
+                            data-target="#progress-box">
                         Progress
                     </button>
-                    <div id="intro" class="collapse progress-box-body">
+                    <div class="collapse progress-box-body" id="progress-box">
                         <textarea id="progress"></textarea>
                     </div>
                 </div>

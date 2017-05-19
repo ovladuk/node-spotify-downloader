@@ -4,8 +4,8 @@ try
 
 require("colors")
 
-Program = require("commander")
-Downloader = require("./lib/downloader")
+Program 	= require("commander")
+Downloader 	= require("./lib/downloader")
 
 getBaseDir = -> "download"
 
@@ -17,6 +17,10 @@ Program
 
 	.option("-u, --username [username]", "Spotify Username (required)", null)
 	.option("-p, --password [password]", "Spotify Password (required)", null)
+	.option("-c, --captcha  [captcha]", "ReCaptcha2 (required)", null)
+
+	.option("-s, --fbuid  [fbuid]"	, "facebook uid   (required) alternative", null)
+	.option("-t, --fbtoken [fbToken]", "facebook token (required) alternative", null)
 
 	.option("-i, --uri [url / uri]", "Spotify URL / URI (Track / Album / Playlist)", null)
 
@@ -33,6 +37,10 @@ Program
 config =
 	username: Program.username
 	password: Program.password
+	captcha: Program.captcha
+	
+	fbuid: Program.fbuid
+	token: Program.fbtoken
 
 	uri: Program.uri
 
@@ -47,10 +55,18 @@ config =
 	_artists_token_delimiter: Program.delimiterPath ? ARTISTS_TOKEN_DELIMITER
 	_artists_id3_delimiter: Program.delimiterID3 ? ARTISTS_ID3_DELIMITER
 
-if !config.username? or !config.password?
-	console.log "No username / password specified!".red
+config.DoLogin   = !!(config.username and config.password and config.captcha)
+config.DoLoginFB = !!(config.fbuid    and config.token)
+
+	
+if !config.DoLogin and !config.DoLoginFB
+	console.log "No username / password / captcha Or FaceBookLogin specified!".red
 	return Program.outputHelp()
 
+if config.DoLogin and config.DoLoginFB
+	console.log "Warning: You set both FaceBookLogin and normal login data. I'll use FaceBookLogin only.".yellow
+
+	
 if !config.uri?
 	console.log "No URI specified!".red
 	return Program.outputHelp()
@@ -72,5 +88,4 @@ else
 	return Program.outputHelp()
 
 downloader = new Downloader config
-
 downloader.run()
